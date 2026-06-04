@@ -2,6 +2,84 @@ const fs = require('fs');
 const path = require('path');
 const AdmZip = require('adm-zip');
 
+async function extractStringsFallback(filePath) {
+  return new Promise((resolve) => {
+    try {
+      const stats = fs.statSync(filePath);
+      if (stats.size === 0) {
+        return resolve('');
+      }
+
+      const stream = fs.createReadStream(filePath, { highWaterMark: 64 * 1024 });
+      let text = '';
+      let currentString = '';
+      let totalLength = 0;
+      const MAX_EXTRACT_LENGTH = 150000; // Cap at 150KB to keep within context limits and save memory
+      let resolved = false;
+
+      const finish = (resultText) => {
+        if (!resolved) {
+          resolved = true;
+          resolve(resultText.replace(/\s+/g, ' ').trim());
+        }
+      };
+
+      stream.on('data', (chunk) => {
+        if (totalLength >= MAX_EXTRACT_LENGTH) {
+          stream.destroy();
+          finish(text);
+          return;
+        }
+        for (let i = 0; i < chunk.length; i++) {
+          const char = chunk[i];
+          // Extract printable characters from space (32) to tilde (126) plus common whitespace
+          if ((char >= 32 && char <= 126) || char === 9 || char === 10 || char === 13) {
+            currentString += String.fromCharCode(char);
+            
+            // Prevent currentString from growing infinitely when there are no non-printable characters
+            if (currentString.length >= 2000) {
+              text += currentString + ' ';
+              totalLength += currentString.length + 1;
+              currentString = '';
+              if (totalLength >= MAX_EXTRACT_LENGTH) {
+                stream.destroy();
+                finish(text);
+                break;
+              }
+            }
+          } else {
+            if (currentString.length >= 4) {
+              text += currentString + ' ';
+              totalLength += currentString.length + 1;
+              if (totalLength >= MAX_EXTRACT_LENGTH) {
+                stream.destroy();
+                finish(text);
+                break;
+              }
+            }
+            currentString = '';
+          }
+        }
+      });
+
+      stream.on('end', () => {
+        if (currentString.length >= 4 && totalLength < MAX_EXTRACT_LENGTH) {
+          text += currentString;
+        }
+        finish(text);
+      });
+
+      stream.on('error', (err) => {
+        console.error('Error in streaming fallback extractor:', err);
+        finish(text);
+      });
+    } catch (e) {
+      console.error('Failed to initialize streaming fallback extractor:', e);
+      resolve('');
+    }
+  });
+}
+
 async function parsePPTX(filePath) {
   try {
     const zip = new AdmZip(filePath);
@@ -33,25 +111,52 @@ async function parsePPTX(filePath) {
       }
     }
     
-    return extractedText;
+    if (extractedText.trim().length > 0) {
+      return extractedText;
+    }
+    return await extractStringsFallback(filePath);
   } catch (error) {
-    console.error('Error parsing PPTX:', error);
-    throw new Error('Failed to parse PowerPoint presentation: ' + error.message);
+    console.warn('PPTX zip extraction failed, attempting binary strings fallback...', error.message);
+    return await extractStringsFallback(filePath);
   }
 }
 
 async function parsePDF(filePath) {
-  const pdfParse = require('pdf-parse');
-  const buffer = fs.readFileSync(filePath);
-  // Limit to first 50 pages of the capability deck to prevent OOM errors on Render Free Tier
-  const data = await pdfParse(buffer, { max: 50 });
-  return data.text;
+  try {
+    const stats = fs.statSync(filePath);
+    const fileSizeInMB = stats.size / (1024 * 1024);
+    
+    if (fileSizeInMB > 15) {
+      console.log(`[Parser] PDF file size is large (${fileSizeInMB.toFixed(2)}MB). Direct to streaming strings fallback to prevent OOM on Render.`);
+      return await extractStringsFallback(filePath);
+    }
+
+    const pdfParse = require('pdf-parse');
+    const buffer = fs.readFileSync(filePath);
+    // Limit to first 50 pages of the capability deck to prevent OOM errors on Render Free Tier
+    const data = await pdfParse(buffer, { max: 50 });
+    if (data && data.text && data.text.trim().length > 10) {
+      return data.text;
+    }
+    return await extractStringsFallback(filePath);
+  } catch (error) {
+    console.warn('PDF parsing failed, attempting binary strings fallback...', error.message);
+    return await extractStringsFallback(filePath);
+  }
 }
 
 async function parseDOCX(filePath) {
-  const mammoth = require('mammoth');
-  const result = await mammoth.extractRawText({ path: filePath });
-  return result.value;
+  try {
+    const mammoth = require('mammoth');
+    const result = await mammoth.extractRawText({ path: filePath });
+    if (result && result.value && result.value.trim().length > 10) {
+      return result.value;
+    }
+    return await extractStringsFallback(filePath);
+  } catch (error) {
+    console.warn('DOCX parsing failed, attempting binary strings fallback...', error.message);
+    return await extractStringsFallback(filePath);
+  }
 }
 
 function parseTXT(filePath) {
