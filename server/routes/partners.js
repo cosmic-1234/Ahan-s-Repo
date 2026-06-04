@@ -97,7 +97,7 @@ router.post('/', (req, res) => {
       description: req.body.description || '',
       solutions: req.body.solutions || [],
       capabilities: req.body.capabilities || [],
-      industries: req.body.industries || [],
+      industries: ['Manufacturing'], // Locked strictly to Manufacturing
       useCases: req.body.useCases || [],
       certifications: req.body.certifications || [],
       tier: req.body.tier || 'Silver',
@@ -129,7 +129,7 @@ router.put('/:id', (req, res) => {
       return res.status(404).json({ error: 'Partner not found' });
     }
 
-    partners[index] = { ...partners[index], ...req.body, id: req.params.id };
+    partners[index] = { ...partners[index], ...req.body, industries: ['Manufacturing'], id: req.params.id };
     writePartners(partners);
     res.json(partners[index]);
   } catch (error) {
@@ -190,6 +190,51 @@ router.post('/import', upload.single('file'), (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Failed to import partners', details: error.message });
+  }
+});
+
+// POST /api/partners/profile-document - Profile and add a partner from a PDF/PPTX/DOCX document
+router.post('/profile-document', upload.single('document'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No document uploaded' });
+    }
+
+    const { parseDocument } = require('../services/documentParser');
+    const { profilePartnerFromText } = require('../services/ai');
+
+    // 1. Extract text from document (PDF/PPTX/DOCX/TXT)
+    const documentText = await parseDocument(req.file.buffer, req.file.mimetype, req.file.originalname);
+    if (!documentText || documentText.trim().length < 50) {
+      return res.status(400).json({ error: 'Could not extract sufficient text from the document.' });
+    }
+
+    // 2. Call AI service to profile partner
+    const partnerProfile = await profilePartnerFromText(documentText);
+
+    // Force "Manufacturing" industry to align with strictly manufacturing scope
+    partnerProfile.industries = ['Manufacturing'];
+
+    // 3. Save partner details
+    const existingPartners = readPartners();
+    partnerProfile.id = `p_${uuidv4().split('-')[0]}`;
+    
+    // Check if partner already exists by name (case-insensitive)
+    const existingIndex = existingPartners.findIndex(
+      e => e.name.toLowerCase() === partnerProfile.name.toLowerCase()
+    );
+    if (existingIndex >= 0) {
+      partnerProfile.id = existingPartners[existingIndex].id;
+      existingPartners[existingIndex] = partnerProfile;
+    } else {
+      existingPartners.push(partnerProfile);
+    }
+
+    writePartners(existingPartners);
+    res.json({ message: 'Partner profiled successfully', partner: partnerProfile });
+  } catch (error) {
+    console.error('Partner profiling error:', error);
+    res.status(500).json({ error: 'Partner profiling failed', details: error.message });
   }
 });
 

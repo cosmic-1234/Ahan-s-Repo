@@ -5,16 +5,6 @@ import FitmentCard from '../components/FitmentCard';
 import LoadingState from '../components/LoadingState';
 import BannerCard from '../components/BannerCard';
 
-const INDUSTRIES = [
-  '', 'Financial Services', 'Healthcare', 'Retail', 'Manufacturing',
-  'Technology', 'Telecom', 'Energy', 'Government', 'Defense',
-  'Insurance', 'Pharmaceuticals', 'Automotive', 'Media', 'Logistics',
-  'Hospitality', 'Real Estate', 'Education', 'CPG', 'Legal'
-];
-
-const URGENCY_OPTIONS = ['', 'Low', 'Medium', 'High', 'Critical'];
-const BUDGET_OPTIONS = ['', 'Under $100K', '$100K - $500K', '$500K - $1M', '$1M - $5M', '$5M+'];
-
 export default function AnalyzeProblem() {
   const toast = useToast();
   const [activeTab, setActiveTab] = useState('text');
@@ -24,9 +14,6 @@ export default function AnalyzeProblem() {
 
   // Text input state
   const [problemText, setProblemText] = useState('');
-  const [industry, setIndustry] = useState('');
-  const [urgency, setUrgency] = useState('');
-  const [budgetRange, setBudgetRange] = useState('');
 
   // Document input state
   const [file, setFile] = useState(null);
@@ -42,7 +29,7 @@ export default function AnalyzeProblem() {
       const response = await fetch('/api/analyze/text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ problemText, industry, urgency, budgetRange }),
+        body: JSON.stringify({ problemText, industry: 'Manufacturing' }),
       });
       if (!response.ok) throw new Error((await response.json()).error || 'Analysis failed');
       const data = await response.json();
@@ -223,29 +210,7 @@ export default function AnalyzeProblem() {
                 <div className="form-hint">{problemText.length} characters — aim for 100+ for best results</div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Industry</label>
-                  <select id="industry-select" value={industry} onChange={(e) => setIndustry(e.target.value)}>
-                    <option value="">Select industry...</option>
-                    {INDUSTRIES.filter(Boolean).map(i => <option key={i} value={i}>{i}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Urgency</label>
-                  <select id="urgency-select" value={urgency} onChange={(e) => setUrgency(e.target.value)}>
-                    <option value="">Select urgency...</option>
-                    {URGENCY_OPTIONS.filter(Boolean).map(u => <option key={u} value={u}>{u}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Budget Range</label>
-                  <select id="budget-select" value={budgetRange} onChange={(e) => setBudgetRange(e.target.value)}>
-                    <option value="">Select budget...</option>
-                    {BUDGET_OPTIONS.filter(Boolean).map(b => <option key={b} value={b}>{b}</option>)}
-                  </select>
-                </div>
-              </div>
+
 
               <div className="form-actions">
                 <button id="analyze-btn" className="btn btn-primary btn-lg" onClick={handleTextAnalysis} disabled={loading}>

@@ -15,6 +15,26 @@ export default function PartnerDatabase() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState(null);
   const [importFile, setImportFile] = useState(null);
+  const [profiling, setProfiling] = useState(false);
+
+  const handleProfileDocument = async (file) => {
+    if (!file) return;
+    setProfiling(true);
+    const formData = new FormData();
+    formData.append('document', file);
+    try {
+      const res = await fetch('/api/partners/profile-document', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error((await res.json()).error || 'Profiling failed');
+      const data = await res.json();
+      toast.success('Partner Profiled', `${data.partner.name} has been automatically profiled and added to the database.`);
+      fetchPartners();
+      fetchFilters();
+    } catch (error) {
+      toast.error('Profiling Failed', error.message);
+    } finally {
+      setProfiling(false);
+    }
+  };
 
   const fetchPartners = useCallback(async () => {
     try {
@@ -123,10 +143,7 @@ export default function PartnerDatabase() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <select className="filter-select" value={filterIndustry} onChange={(e) => setFilterIndustry(e.target.value)}>
-          <option value="">All Industries</option>
-          {filters.industries.map(i => <option key={i} value={i}>{i}</option>)}
-        </select>
+
         <select className="filter-select" value={filterTier} onChange={(e) => setFilterTier(e.target.value)}>
           <option value="">All Tiers</option>
           {filters.tiers.map(t => <option key={t} value={t}>{t}</option>)}
@@ -137,8 +154,8 @@ export default function PartnerDatabase() {
         </button>
       </div>
 
-      {/* Import Section */}
-      <div style={{ display: 'flex', gap: 'var(--space-3)', marginBottom: 'var(--space-6)', alignItems: 'center' }}>
+      {/* Import & Profiling Section */}
+      <div style={{ display: 'flex', gap: 'var(--space-3)', marginBottom: 'var(--space-6)', alignItems: 'center', flexWrap: 'wrap' }}>
         <input
           type="file"
           accept=".csv,.xlsx,.xls"
@@ -150,6 +167,21 @@ export default function PartnerDatabase() {
           <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor"><path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd"/></svg>
           Import from Spreadsheet
         </label>
+        
+        <input
+          type="file"
+          accept=".pdf,.pptx,.ppt,.docx,.txt"
+          onChange={(e) => handleProfileDocument(e.target.files[0])}
+          style={{ display: 'none' }}
+          id="profile-document-input"
+        />
+        <label htmlFor="profile-document-input" className="btn btn-secondary btn-sm" style={{ cursor: 'pointer' }}>
+          <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor">
+            <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd"/>
+          </svg>
+          Profile Partner from PDF/PPTX
+        </label>
+
         {importFile && (
           <>
             <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)' }}>{importFile.name}</span>
@@ -157,6 +189,14 @@ export default function PartnerDatabase() {
             <button className="btn btn-ghost btn-sm" onClick={() => setImportFile(null)}>Cancel</button>
           </>
         )}
+
+        {profiling && (
+          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span className="spinner-mini" style={{ width: '14px', height: '14px', border: '2px solid var(--color-accent)', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin 1s linear infinite' }}></span>
+            AI is profiling partner deck...
+          </span>
+        )}
+
         <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', marginLeft: 'auto' }}>
           {partners.length} partner{partners.length !== 1 ? 's' : ''} found
         </span>
@@ -170,7 +210,7 @@ export default function PartnerDatabase() {
               <th>Partner</th>
               <th>Tier</th>
               <th>Solutions</th>
-              <th>Industries</th>
+              <th>Capabilities</th>
               <th>Employees</th>
               <th>Actions</th>
             </tr>
@@ -204,10 +244,14 @@ export default function PartnerDatabase() {
                     </div>
                   </td>
                   <td>
-                    <span style={{ fontSize: 'var(--text-sm)' }}>
-                      {p.industries.slice(0, 2).join(', ')}
-                      {p.industries.length > 2 && ` +${p.industries.length - 2}`}
-                    </span>
+                    <div className="tags-list" style={{ maxWidth: '260px' }}>
+                      {p.capabilities.slice(0, 3).map((c, i) => (
+                        <span key={i} className="tag">{c}</span>
+                      ))}
+                      {p.capabilities.length > 3 && (
+                        <span className="tag">+{p.capabilities.length - 3}</span>
+                      )}
+                    </div>
                   </td>
                   <td>{p.employeeCount ? p.employeeCount.toLocaleString() : '—'}</td>
                   <td onClick={(e) => e.stopPropagation()}>
@@ -295,7 +339,6 @@ function PartnerModal({ partner, onSave, onClose }) {
     description: partner?.description || '',
     solutions: partner?.solutions?.join(', ') || '',
     capabilities: partner?.capabilities?.join(', ') || '',
-    industries: partner?.industries?.join(', ') || '',
     useCases: partner?.useCases?.join('\n') || '',
     certifications: partner?.certifications?.join(', ') || '',
     tier: partner?.tier || 'Silver',
@@ -315,7 +358,7 @@ function PartnerModal({ partner, onSave, onClose }) {
       description: form.description,
       solutions: parseList(form.solutions),
       capabilities: parseList(form.capabilities),
-      industries: parseList(form.industries),
+      industries: ['Manufacturing'],
       useCases: form.useCases.split('\n').map(s => s.trim()).filter(Boolean),
       certifications: parseList(form.certifications),
       tier: form.tier,
@@ -373,10 +416,7 @@ function PartnerModal({ partner, onSave, onClose }) {
               <input value={form.capabilities} onChange={update('capabilities')} placeholder="Comma-separated: AWS, Kubernetes, Terraform..." />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Industries</label>
-              <input value={form.industries} onChange={update('industries')} placeholder="Comma-separated: Financial Services, Healthcare..." />
-            </div>
+
 
             <div className="form-group">
               <label className="form-label">Certifications</label>

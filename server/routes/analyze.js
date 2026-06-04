@@ -26,21 +26,21 @@ function writeAnalyses(analyses) {
 // POST /api/analyze/text - Analyze client problem from text
 router.post('/text', async (req, res) => {
   try {
-    const { problemText, industry, urgency, budgetRange } = req.body;
+    const { problemText } = req.body;
 
     if (!problemText || problemText.trim().length < 10) {
       return res.status(400).json({ error: 'Please provide a detailed problem description (at least 10 characters)' });
     }
 
     const partners = readPartners();
-    const result = await analyzeProblem(problemText, partners, { industry, urgency, budgetRange });
+    const result = await analyzeProblem(problemText, partners, { industry: 'Manufacturing' });
 
     // Save analysis
     const analysis = {
       id: uuidv4(),
       type: 'text',
       timestamp: new Date().toISOString(),
-      input: { problemText, industry, urgency, budgetRange },
+      input: { problemText, industry: 'Manufacturing' },
       result,
       partnerCount: result.rankedPartners?.length || 0
     };
@@ -92,7 +92,7 @@ Success Criteria: ${(extraction.successCriteria || []).join('; ')}
     // Step 4: Analyze against partners
     const partners = readPartners();
     const result = await analyzeProblem(problemText, partners, {
-      industry: extraction.industry
+      industry: 'Manufacturing'
     });
 
     // Save analysis

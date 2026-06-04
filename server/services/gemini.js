@@ -37,7 +37,9 @@ You must respond in valid JSON format matching the schema requested by the user.
 4. Risk factors
 5. Recommended engagement approach
 
-Also provide an overall recommendation with clear rationale. You must respond in valid JSON format matching the schema requested by the user.`
+Also provide an overall recommendation with clear rationale. You must respond in valid JSON format matching the schema requested by the user.`,
+
+  profilePartner: `You are a corporate partner profiling assistant. Analyze the capability deck, brochure, or description of a technology company and extract structured profiling information. You must respond in valid JSON format matching the schema requested by the user.`
 };
 
 async function analyzeProblem(problemText, partners, options = {}) {
@@ -227,4 +229,52 @@ Compare these partners specifically against this client problem. Return a JSON o
   }
 }
 
-module.exports = { analyzeProblem, extractDocument, comparePartners };
+async function profilePartnerFromText(documentText) {
+  if (!genAI) {
+    throw new Error('Gemini API key is not configured. Please set GEMINI_API_KEY in server/.env');
+  }
+
+  const userMessage = `
+DOCUMENT CONTENT:
+${documentText.substring(0, 30000)}
+
+Extract the partner profiling information from the document. Return a JSON object with this exact structure:
+{
+  "name": "Full official name of the partner company",
+  "description": "Professional 2-3 sentence executive description of their focus areas, value proposition, and solutions",
+  "solutions": ["List of core business solutions, e.g., Supply Chain Optimization, MES, Predictive Maintenance, Digital Twin"],
+  "capabilities": ["List of core technical capabilities or tools, e.g., IoT, Siemens MindSphere, SAP, AWS IoT, Computer Vision"],
+  "industries": ["Manufacturing"],
+  "useCases": ["Brief description of 1-3 successful projects or deploy use cases mentioned"],
+  "certifications": ["List of key partner tiers or certifications, e.g., AWS Advanced Partner, SAP Gold Partner"],
+  "tier": "Gold", // (Must be exactly one of: "Platinum", "Gold", or "Silver". Base this on their size, certifications, or status if mentioned, default to "Silver")
+  "website": "Domain name or URL if mentioned, otherwise empty",
+  "contactEmail": "Contact or partnership email if mentioned, otherwise empty",
+  "headquarters": "City and Country of their main office if mentioned",
+  "employeeCount": 500, // (Estimated or exact number of employees if mentioned, default to 0)
+  "yearFounded": 2012 // (Year founded if mentioned, default to 0)
+}
+
+Focus strictly on manufacturing-related details, capabilities, and use cases, as this portal is strictly scoped for Manufacturing.`;
+
+  const model = genAI.getGenerativeModel({
+    model: MODEL_NAME,
+    systemInstruction: SYSTEM_PROMPTS.profilePartner,
+    generationConfig: { responseMimeType: 'application/json' }
+  });
+
+  const response = await model.generateContent(userMessage);
+  const text = response.response.text();
+  
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    throw new Error('Failed to parse Gemini partner profiling response: ' + e.message);
+  }
+}
+
+module.exports = { analyzeProblem, extractDocument, comparePartners, profilePartnerFromText };

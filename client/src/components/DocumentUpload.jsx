@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-export default function DocumentUpload({ onFileSelect, accept = '.pdf,.docx,.txt', maxSize = 20 }) {
+export default function DocumentUpload({ onFileSelect, accept = '.pdf,.docx,.pptx,.ppt,.txt', maxSize = 20 }) {
   const [dragging, setDragging] = useState(false);
   const [file, setFile] = useState(null);
   const inputRef = useRef(null);
@@ -54,6 +54,7 @@ export default function DocumentUpload({ onFileSelect, accept = '.pdf,.docx,.txt
     const ext = name.split('.').pop().toLowerCase();
     if (ext === 'pdf') return '📄';
     if (ext === 'docx' || ext === 'doc') return '📝';
+    if (ext === 'pptx' || ext === 'ppt') return '📊';
     return '📎';
   };
 
@@ -82,7 +83,7 @@ export default function DocumentUpload({ onFileSelect, accept = '.pdf,.docx,.txt
           <strong>Click to upload</strong> or drag and drop
         </div>
         <div className="upload-zone-hint">
-          PDF, DOCX, or TXT (max {maxSize}MB)
+          PDF, DOCX, PPTX, or TXT (max {maxSize}MB)
         </div>
       </div>
 

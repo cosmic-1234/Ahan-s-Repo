@@ -1,5 +1,44 @@
 const fs = require('fs');
 const path = require('path');
+const AdmZip = require('adm-zip');
+
+async function parsePPTX(buffer) {
+  try {
+    const zip = new AdmZip(buffer);
+    const zipEntries = zip.getEntries();
+    
+    // Sort slide files (ppt/slides/slide1.xml, ppt/slides/slide2.xml, etc.)
+    const slideEntries = zipEntries
+      .filter(entry => entry.entryName.startsWith('ppt/slides/slide') && entry.entryName.endsWith('.xml'))
+      .sort((a, b) => {
+        const matchA = a.entryName.match(/slide(\d+)\.xml/);
+        const matchB = b.entryName.match(/slide(\d+)\.xml/);
+        const numA = matchA ? parseInt(matchA[1]) : 0;
+        const numB = matchB ? parseInt(matchB[1]) : 0;
+        return numA - numB;
+      });
+
+    let extractedText = '';
+    
+    for (const entry of slideEntries) {
+      const content = entry.getData().toString('utf-8');
+      
+      // Extract text inside <a:t>...</a:t> elements which contain PowerPoint text
+      const matches = content.match(/<a:t>([^<]*)<\/a:t>/g);
+      if (matches) {
+        const slideText = matches
+          .map(match => match.replace(/<\/?a:t>/g, ''))
+          .join(' ');
+        extractedText += slideText + '\n';
+      }
+    }
+    
+    return extractedText;
+  } catch (error) {
+    console.error('Error parsing PPTX:', error);
+    throw new Error('Failed to parse PowerPoint presentation: ' + error.message);
+  }
+}
 
 async function parsePDF(buffer) {
   const pdfParse = require('pdf-parse');
@@ -27,6 +66,12 @@ async function parseDocument(buffer, mimetype, originalname) {
     ext === '.docx'
   ) {
     return await parseDOCX(buffer);
+  } else if (
+    mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+    ext === '.pptx' ||
+    ext === '.ppt'
+  ) {
+    return await parsePPTX(buffer);
   } else if (mimetype === 'text/plain' || ext === '.txt') {
     return parseTXT(buffer);
   } else {

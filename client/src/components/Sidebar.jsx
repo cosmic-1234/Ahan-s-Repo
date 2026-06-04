@@ -78,15 +78,19 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <div className="sidebar-logo">
-          <svg viewBox="0 0 20 20">
-            <path d="M5 10L10 5L15 10L10 15Z" fill="white" opacity="0.9"/>
-            <circle cx="10" cy="10" r="2.5" fill="white"/>
+        <div className="sidebar-logo" style={{ background: '#E31B23', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '0px', width: '36px', height: '36px' }}>
+          <svg viewBox="0 0 100 100" width="22" height="22" fill="white">
+            <path d="M15 20h70v15H57.5v45h-15V35H15z" />
           </svg>
         </div>
         <div>
-          <div className="sidebar-title">Partnership Fitment</div>
-          <div className="sidebar-subtitle">AI Agent Portal</div>
+          <div className="sidebar-title" style={{ display: 'flex', alignItems: 'center', gap: '2px', letterSpacing: '0.02em' }}>
+            <span style={{ color: '#E31B23', fontWeight: '800' }}>Tech</span>
+            <span style={{ fontWeight: '600' }}>Mahindra</span>
+          </div>
+          <div className="sidebar-subtitle" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: '500', color: 'var(--color-text-muted)' }}>
+            Partner Recommendation
+          </div>
         </div>
       </div>
 

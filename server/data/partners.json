@@ -5,7 +5,7 @@
     "description": "Enterprise cloud migration and modernization partner specializing in multi-cloud strategies for Fortune 500 companies. Deep expertise in AWS, Azure, and GCP with a proven track record of 200+ successful migrations.",
     "solutions": ["Cloud Migration", "Cloud-Native Development", "Multi-Cloud Management", "Hybrid Cloud Architecture", "Cloud Cost Optimization"],
     "capabilities": ["AWS", "Azure", "GCP", "Kubernetes", "Terraform", "CloudFormation", "Serverless", "Microservices"],
-    "industries": ["Financial Services", "Healthcare", "Retail", "Manufacturing"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Legacy mainframe to cloud migration for a $50B bank reducing infrastructure costs by 40%",
       "Multi-cloud disaster recovery setup for a healthcare provider ensuring 99.99% uptime",
@@ -25,7 +25,7 @@
     "description": "Leading cybersecurity firm providing end-to-end security solutions from threat assessment to incident response. Specializes in zero-trust architecture and compliance frameworks for regulated industries.",
     "solutions": ["Zero Trust Architecture", "SOC-as-a-Service", "Penetration Testing", "Compliance & Governance", "Identity & Access Management", "Threat Intelligence"],
     "capabilities": ["SIEM/SOAR", "EDR/XDR", "Cloud Security", "Application Security", "Network Security", "IAM", "PKI", "DLP"],
-    "industries": ["Financial Services", "Government", "Healthcare", "Defense", "Energy"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Zero-trust implementation for a federal agency with 50,000 endpoints across 200 locations",
       "SOC buildout for a regional bank meeting OCC and FFIEC requirements",
@@ -45,7 +45,7 @@
     "description": "Enterprise data and AI consultancy transforming organizations through advanced analytics, machine learning platforms, and data governance. Expertise in building scalable data lakehouse architectures.",
     "solutions": ["Data Lakehouse Architecture", "ML/AI Platform Build", "Business Intelligence", "Data Governance", "Real-Time Analytics", "Computer Vision"],
     "capabilities": ["Databricks", "Snowflake", "Apache Spark", "TensorFlow", "PyTorch", "dbt", "Airflow", "Power BI", "Tableau"],
-    "industries": ["Retail", "Financial Services", "Telecom", "Media", "CPG"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Unified data lakehouse for a $20B retailer consolidating 50+ data sources into real-time analytics",
       "Customer churn prediction model achieving 94% accuracy for a telecom operator with 30M subscribers",
@@ -65,7 +65,7 @@
     "description": "Global ERP implementation and transformation partner with deep expertise in SAP S/4HANA and Oracle Cloud. Specializes in complex, multi-country rollouts for enterprises with $1B+ revenue.",
     "solutions": ["SAP S/4HANA Implementation", "Oracle Cloud ERP", "ERP Modernization", "Business Process Reengineering", "Change Management", "Integration Services"],
     "capabilities": ["SAP S/4HANA", "SAP BTP", "Oracle Fusion", "MuleSoft", "Boomi", "ABAP", "SAP Fiori", "Workday"],
-    "industries": ["Manufacturing", "Energy", "Utilities", "Automotive", "Pharmaceuticals"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Global SAP S/4HANA rollout across 30 countries for a Fortune 100 manufacturer in 18 months",
       "Oracle Cloud ERP migration for an energy company consolidating 15 legacy systems",
@@ -85,7 +85,7 @@
     "description": "DevOps transformation consultancy accelerating software delivery for enterprises. Expert in CI/CD pipeline design, platform engineering, and SRE practices at scale.",
     "solutions": ["CI/CD Pipeline Design", "Platform Engineering", "SRE Implementation", "Infrastructure as Code", "Container Orchestration", "GitOps"],
     "capabilities": ["Jenkins", "GitHub Actions", "GitLab CI", "ArgoCD", "Kubernetes", "Docker", "Helm", "Prometheus", "Grafana", "Terraform"],
-    "industries": ["Technology", "Financial Services", "Retail", "Media", "Telecom"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Platform engineering initiative reducing deployment time from 2 weeks to 15 minutes for a fintech with 500 developers",
       "SRE transformation achieving 99.99% availability for a streaming platform serving 50M users",
@@ -105,7 +105,7 @@
     "description": "Pure-play AI/ML consultancy focused on deploying production-grade generative AI and traditional ML solutions. Leaders in LLM fine-tuning, RAG architectures, and responsible AI frameworks.",
     "solutions": ["Generative AI Strategy", "LLM Fine-Tuning & RAG", "MLOps Platform", "Conversational AI", "Document Intelligence", "Responsible AI"],
     "capabilities": ["OpenAI", "Anthropic Claude", "LangChain", "LlamaIndex", "Hugging Face", "Vector Databases", "MLflow", "SageMaker", "Vertex AI"],
-    "industries": ["Financial Services", "Legal", "Healthcare", "Insurance", "Government"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Enterprise RAG system processing 10M+ legal documents for a top-10 law firm with 95% retrieval accuracy",
       "Automated claims processing using GenAI reducing turnaround from 5 days to 4 hours for an insurer",
@@ -125,7 +125,7 @@
     "description": "Enterprise networking and SD-WAN specialist providing modern network infrastructure for distributed organizations. Expert in SASE, network automation, and edge computing deployments.",
     "solutions": ["SD-WAN Deployment", "SASE Architecture", "Network Automation", "Edge Computing", "5G Private Networks", "Network as Code"],
     "capabilities": ["Cisco", "Palo Alto Prisma", "VMware VeloCloud", "Aruba", "Ansible Network", "Batfish", "Nautobot", "YANG/NETCONF"],
-    "industries": ["Retail", "Manufacturing", "Healthcare", "Logistics", "Hospitality"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "SASE rollout across 5,000 retail locations for a national restaurant chain reducing network costs by 35%",
       "Private 5G network for a smart factory enabling real-time IoT data processing at the edge",
@@ -145,7 +145,7 @@
     "description": "Digital experience and CX transformation partner building world-class customer-facing platforms. Expertise in headless commerce, content management, and omnichannel engagement.",
     "solutions": ["Headless Commerce", "Content Management", "Customer Data Platform", "Omnichannel Engagement", "Digital Experience Platform", "Personalization Engine"],
     "capabilities": ["Salesforce Commerce Cloud", "Adobe Experience Manager", "Contentful", "Segment", "Braze", "Next.js", "React", "GraphQL", "Algolia"],
-    "industries": ["Retail", "CPG", "Media", "Travel", "Financial Services"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Headless commerce platform for a luxury brand achieving 3x conversion rate improvement across web and mobile",
       "CDP implementation unifying 50M customer profiles across 12 touchpoints for a CPG company",
@@ -165,7 +165,7 @@
     "description": "Sustainability and ESG technology consultancy helping enterprises measure, reduce, and report their environmental impact. Specializes in carbon accounting platforms and sustainable IT strategies.",
     "solutions": ["Carbon Accounting Platform", "ESG Reporting", "Sustainable IT Strategy", "Green Cloud Optimization", "Circular Economy Solutions", "Supply Chain Sustainability"],
     "capabilities": ["Salesforce Net Zero", "SAP Sustainability", "Microsoft Cloud for Sustainability", "LCA Tools", "GHG Protocol", "TCFD", "CSRD Compliance"],
-    "industries": ["Energy", "Manufacturing", "Financial Services", "Retail", "Logistics"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Enterprise carbon accounting platform tracking Scope 1-3 emissions across 200 facilities for an energy company",
       "Green cloud migration reducing IT carbon footprint by 45% for a global bank",
@@ -185,7 +185,7 @@
     "description": "Regulatory compliance and risk management technology partner specializing in financial services and healthcare compliance. Deep expertise in automated compliance monitoring and regulatory reporting.",
     "solutions": ["Automated Compliance Monitoring", "Regulatory Reporting", "Risk Assessment Platform", "KYC/AML Solutions", "HIPAA Compliance", "Audit Management"],
     "capabilities": ["ServiceNow GRC", "Archer", "OneTrust", "Palantir", "Riskonnect", "RegTech APIs", "Smart Contracts", "RPA for Compliance"],
-    "industries": ["Financial Services", "Healthcare", "Insurance", "Pharmaceuticals", "Government"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Automated AML monitoring system processing 5M+ daily transactions for a multinational bank",
       "HIPAA compliance platform for a health system managing PHI across 100+ facilities",
@@ -205,7 +205,7 @@
     "description": "HR technology and workforce transformation partner helping enterprises modernize talent management, employee experience, and workforce analytics with AI-driven insights.",
     "solutions": ["HCM Implementation", "Workforce Analytics", "Employee Experience Platform", "Talent Acquisition AI", "Learning & Development", "HR Process Automation"],
     "capabilities": ["Workday", "SuccessFactors", "ServiceNow HRSD", "Eightfold AI", "Cornerstone", "Power Platform", "People Analytics", "RPA"],
-    "industries": ["Technology", "Financial Services", "Healthcare", "Retail", "Manufacturing"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Workday HCM global rollout for a tech company with 80,000 employees across 40 countries",
       "AI-powered talent marketplace reducing internal hiring time by 60% for a Fortune 500",
@@ -225,11 +225,11 @@
     "description": "Blockchain and Web3 enterprise solutions partner building decentralized applications, tokenization platforms, and smart contract solutions for regulated industries.",
     "solutions": ["Enterprise Blockchain", "Asset Tokenization", "Smart Contracts", "Decentralized Identity", "Supply Chain Traceability", "Digital Currency Solutions"],
     "capabilities": ["Hyperledger Fabric", "Ethereum", "Polygon", "R3 Corda", "IPFS", "Solidity", "Chainlink", "Zero-Knowledge Proofs"],
-    "industries": ["Financial Services", "Supply Chain", "Healthcare", "Government", "Real Estate"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Trade finance platform on Hyperledger reducing settlement time from 5 days to 4 hours for a consortium of 20 banks",
       "Pharmaceutical supply chain traceability system tracking 50M+ units from manufacturer to patient",
-      "Real estate tokenization platform enabling fractional ownership of $500M+ commercial properties"
+      "Real-time estate tokenization platform enabling fractional ownership of $500M+ commercial properties"
     ],
     "certifications": ["Hyperledger Certified Partner", "AWS Blockchain Competency", "R3 Corda Partner"],
     "tier": "Silver",
@@ -245,7 +245,7 @@
     "description": "Industrial IoT and smart infrastructure partner enabling digital twins, predictive maintenance, and connected operations for asset-heavy industries.",
     "solutions": ["Industrial IoT Platform", "Digital Twin", "Predictive Maintenance", "Connected Operations", "Smart Building", "Fleet Management"],
     "capabilities": ["Azure IoT Hub", "AWS IoT Core", "PTC ThingWorx", "Siemens MindSphere", "MQTT", "OPC-UA", "Edge AI", "Time Series Databases"],
-    "industries": ["Manufacturing", "Energy", "Utilities", "Transportation", "Mining"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "Predictive maintenance platform monitoring 50,000 industrial assets reducing unplanned downtime by 70%",
       "Digital twin of a $2B chemical plant enabling real-time process optimization",
@@ -265,7 +265,7 @@
     "description": "Enterprise integration and API management specialist connecting complex IT ecosystems. Expert in iPaaS, event-driven architecture, and legacy system modernization through APIs.",
     "solutions": ["API Management", "iPaaS Implementation", "Event-Driven Architecture", "Legacy Modernization", "B2B Integration", "Data Integration"],
     "capabilities": ["MuleSoft", "Boomi", "Apigee", "Kong", "Apache Kafka", "RabbitMQ", "GraphQL Federation", "gRPC", "AsyncAPI"],
-    "industries": ["Financial Services", "Healthcare", "Retail", "Telecom", "Insurance"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "API-first modernization of 200+ legacy COBOL services for a top-5 US bank",
       "Event-driven architecture processing 1M+ events/second for a real-time payments platform",
@@ -285,7 +285,7 @@
     "description": "IT service management and operations partner specializing in ServiceNow implementations, AIOps, and IT operations modernization for large enterprises.",
     "solutions": ["ServiceNow Implementation", "AIOps Platform", "ITSM Modernization", "IT Operations Automation", "Enterprise Service Management", "Observability Platform"],
     "capabilities": ["ServiceNow", "Splunk", "Datadog", "PagerDuty", "Dynatrace", "Elastic", "Ansible", "BMC Helix", "AI/ML for Ops"],
-    "industries": ["Financial Services", "Technology", "Healthcare", "Telecom", "Government"],
+    "industries": ["Manufacturing"],
     "useCases": [
       "ServiceNow ITSM/ITOM enterprise rollout for a bank with 100,000 employees reducing ticket resolution by 50%",
       "AIOps implementation correlating alerts from 15 monitoring tools reducing MTTR by 65%",

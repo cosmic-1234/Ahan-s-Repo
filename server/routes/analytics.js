@@ -62,16 +62,24 @@ router.get('/dashboard', (req, res) => {
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
 
-    // Industry distribution from analyses
-    const industryCount = {};
+    // Capability matched distribution from analyses
+    const capabilityMatchCount = {};
     analyses.forEach(a => {
-      const industry = a.input?.industry || a.input?.extraction?.industry || 'Unspecified';
-      industryCount[industry] = (industryCount[industry] || 0) + 1;
+      if (a.result && a.result.rankedPartners) {
+        a.result.rankedPartners.forEach(rp => {
+          if (rp.capabilitiesMatched) {
+            rp.capabilitiesMatched.forEach(cap => {
+              capabilityMatchCount[cap] = (capabilityMatchCount[cap] || 0) + 1;
+            });
+          }
+        });
+      }
     });
 
-    const industryDistribution = Object.entries(industryCount)
+    const capabilityDistribution = Object.entries(capabilityMatchCount)
       .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count);
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
 
     // Analysis type distribution
     const textAnalyses = analyses.filter(a => a.type === 'text').length;
@@ -110,7 +118,7 @@ router.get('/dashboard', (req, res) => {
       totalAnalyses,
       avgFitmentScore,
       topPartners,
-      industryDistribution,
+      capabilityDistribution,
       analysisTypes: { text: textAnalyses, document: documentAnalyses },
       tierDistribution: tierCount,
       analysesOverTime,

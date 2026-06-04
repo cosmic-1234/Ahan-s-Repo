@@ -147,16 +147,16 @@ export default function Analytics() {
           )}
         </div>
 
-        {/* Industry Distribution */}
+        {/* Matched Capabilities Distribution */}
         <div className="chart-container">
-          <div className="chart-title">Industry Distribution</div>
-          {data.industryDistribution?.length > 0 ? (
+          <div className="chart-title">Matched Capabilities Distribution</div>
+          {data.capabilityDistribution?.length > 0 ? (
             <div className="donut-chart-wrapper">
               <div className="donut-chart">
-                <DonutChart data={data.industryDistribution} />
+                <DonutChart data={data.capabilityDistribution} />
               </div>
               <div className="donut-legend">
-                {data.industryDistribution.slice(0, 8).map((item, i) => (
+                {data.capabilityDistribution.slice(0, 8).map((item, i) => (
                   <div key={i} className="donut-legend-item">
                     <div className="donut-legend-dot" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
                     <span>{item.name}</span>
@@ -166,7 +166,7 @@ export default function Analytics() {
               </div>
             </div>
           ) : (
-            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>No data yet. Run analyses to see industry breakdown.</p>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>No data yet. Run analyses to see matched capability trends.</p>
           )}
         </div>
       </div>
