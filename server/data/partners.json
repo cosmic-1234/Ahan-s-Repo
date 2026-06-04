@@ -1,0 +1,302 @@
+[
+  {
+    "id": "p001",
+    "name": "CloudSphere Technologies",
+    "description": "Enterprise cloud migration and modernization partner specializing in multi-cloud strategies for Fortune 500 companies. Deep expertise in AWS, Azure, and GCP with a proven track record of 200+ successful migrations.",
+    "solutions": ["Cloud Migration", "Cloud-Native Development", "Multi-Cloud Management", "Hybrid Cloud Architecture", "Cloud Cost Optimization"],
+    "capabilities": ["AWS", "Azure", "GCP", "Kubernetes", "Terraform", "CloudFormation", "Serverless", "Microservices"],
+    "industries": ["Financial Services", "Healthcare", "Retail", "Manufacturing"],
+    "useCases": [
+      "Legacy mainframe to cloud migration for a $50B bank reducing infrastructure costs by 40%",
+      "Multi-cloud disaster recovery setup for a healthcare provider ensuring 99.99% uptime",
+      "Cloud-native e-commerce platform handling 10M+ daily transactions"
+    ],
+    "certifications": ["AWS Advanced Partner", "Azure Expert MSP", "Google Cloud Premier Partner"],
+    "tier": "Platinum",
+    "website": "https://cloudsphere.example.com",
+    "contactEmail": "partnerships@cloudsphere.example.com",
+    "headquarters": "San Francisco, CA",
+    "employeeCount": 5000,
+    "yearFounded": 2012
+  },
+  {
+    "id": "p002",
+    "name": "CyberVault Security",
+    "description": "Leading cybersecurity firm providing end-to-end security solutions from threat assessment to incident response. Specializes in zero-trust architecture and compliance frameworks for regulated industries.",
+    "solutions": ["Zero Trust Architecture", "SOC-as-a-Service", "Penetration Testing", "Compliance & Governance", "Identity & Access Management", "Threat Intelligence"],
+    "capabilities": ["SIEM/SOAR", "EDR/XDR", "Cloud Security", "Application Security", "Network Security", "IAM", "PKI", "DLP"],
+    "industries": ["Financial Services", "Government", "Healthcare", "Defense", "Energy"],
+    "useCases": [
+      "Zero-trust implementation for a federal agency with 50,000 endpoints across 200 locations",
+      "SOC buildout for a regional bank meeting OCC and FFIEC requirements",
+      "Cloud security posture management for a healthcare system across AWS and Azure"
+    ],
+    "certifications": ["ISO 27001", "SOC 2 Type II", "FedRAMP Authorized", "CMMC Level 3"],
+    "tier": "Platinum",
+    "website": "https://cybervault.example.com",
+    "contactEmail": "partnerships@cybervault.example.com",
+    "headquarters": "Washington, DC",
+    "employeeCount": 3500,
+    "yearFounded": 2010
+  },
+  {
+    "id": "p003",
+    "name": "DataPulse Analytics",
+    "description": "Enterprise data and AI consultancy transforming organizations through advanced analytics, machine learning platforms, and data governance. Expertise in building scalable data lakehouse architectures.",
+    "solutions": ["Data Lakehouse Architecture", "ML/AI Platform Build", "Business Intelligence", "Data Governance", "Real-Time Analytics", "Computer Vision"],
+    "capabilities": ["Databricks", "Snowflake", "Apache Spark", "TensorFlow", "PyTorch", "dbt", "Airflow", "Power BI", "Tableau"],
+    "industries": ["Retail", "Financial Services", "Telecom", "Media", "CPG"],
+    "useCases": [
+      "Unified data lakehouse for a $20B retailer consolidating 50+ data sources into real-time analytics",
+      "Customer churn prediction model achieving 94% accuracy for a telecom operator with 30M subscribers",
+      "Computer vision quality inspection system reducing manufacturing defects by 60%"
+    ],
+    "certifications": ["Databricks Elite Partner", "Snowflake Premier Partner", "AWS Data Competency"],
+    "tier": "Gold",
+    "website": "https://datapulse.example.com",
+    "contactEmail": "partnerships@datapulse.example.com",
+    "headquarters": "New York, NY",
+    "employeeCount": 2800,
+    "yearFounded": 2015
+  },
+  {
+    "id": "p004",
+    "name": "ERP Nexus Group",
+    "description": "Global ERP implementation and transformation partner with deep expertise in SAP S/4HANA and Oracle Cloud. Specializes in complex, multi-country rollouts for enterprises with $1B+ revenue.",
+    "solutions": ["SAP S/4HANA Implementation", "Oracle Cloud ERP", "ERP Modernization", "Business Process Reengineering", "Change Management", "Integration Services"],
+    "capabilities": ["SAP S/4HANA", "SAP BTP", "Oracle Fusion", "MuleSoft", "Boomi", "ABAP", "SAP Fiori", "Workday"],
+    "industries": ["Manufacturing", "Energy", "Utilities", "Automotive", "Pharmaceuticals"],
+    "useCases": [
+      "Global SAP S/4HANA rollout across 30 countries for a Fortune 100 manufacturer in 18 months",
+      "Oracle Cloud ERP migration for an energy company consolidating 15 legacy systems",
+      "SAP BTP integration platform connecting 200+ APIs for a pharmaceutical company"
+    ],
+    "certifications": ["SAP Platinum Partner", "Oracle Cloud Excellence Partner", "Workday Select Partner"],
+    "tier": "Platinum",
+    "website": "https://erpnexus.example.com",
+    "contactEmail": "partnerships@erpnexus.example.com",
+    "headquarters": "Chicago, IL",
+    "employeeCount": 8000,
+    "yearFounded": 2005
+  },
+  {
+    "id": "p005",
+    "name": "DevOps Velocity",
+    "description": "DevOps transformation consultancy accelerating software delivery for enterprises. Expert in CI/CD pipeline design, platform engineering, and SRE practices at scale.",
+    "solutions": ["CI/CD Pipeline Design", "Platform Engineering", "SRE Implementation", "Infrastructure as Code", "Container Orchestration", "GitOps"],
+    "capabilities": ["Jenkins", "GitHub Actions", "GitLab CI", "ArgoCD", "Kubernetes", "Docker", "Helm", "Prometheus", "Grafana", "Terraform"],
+    "industries": ["Technology", "Financial Services", "Retail", "Media", "Telecom"],
+    "useCases": [
+      "Platform engineering initiative reducing deployment time from 2 weeks to 15 minutes for a fintech with 500 developers",
+      "SRE transformation achieving 99.99% availability for a streaming platform serving 50M users",
+      "GitOps implementation managing 2000+ microservices for an e-commerce giant"
+    ],
+    "certifications": ["Kubernetes Certified Service Provider", "GitHub Partner", "HashiCorp Elite Partner"],
+    "tier": "Gold",
+    "website": "https://devopsvelocity.example.com",
+    "contactEmail": "partnerships@devopsvelocity.example.com",
+    "headquarters": "Austin, TX",
+    "employeeCount": 1200,
+    "yearFounded": 2016
+  },
+  {
+    "id": "p006",
+    "name": "QuantumEdge AI",
+    "description": "Pure-play AI/ML consultancy focused on deploying production-grade generative AI and traditional ML solutions. Leaders in LLM fine-tuning, RAG architectures, and responsible AI frameworks.",
+    "solutions": ["Generative AI Strategy", "LLM Fine-Tuning & RAG", "MLOps Platform", "Conversational AI", "Document Intelligence", "Responsible AI"],
+    "capabilities": ["OpenAI", "Anthropic Claude", "LangChain", "LlamaIndex", "Hugging Face", "Vector Databases", "MLflow", "SageMaker", "Vertex AI"],
+    "industries": ["Financial Services", "Legal", "Healthcare", "Insurance", "Government"],
+    "useCases": [
+      "Enterprise RAG system processing 10M+ legal documents for a top-10 law firm with 95% retrieval accuracy",
+      "Automated claims processing using GenAI reducing turnaround from 5 days to 4 hours for an insurer",
+      "Internal knowledge assistant serving 20,000 employees with domain-specific fine-tuned LLM"
+    ],
+    "certifications": ["AWS ML Competency", "Google Cloud AI Partner", "Anthropic Integration Partner"],
+    "tier": "Platinum",
+    "website": "https://quantumedge.example.com",
+    "contactEmail": "partnerships@quantumedge.example.com",
+    "headquarters": "Boston, MA",
+    "employeeCount": 800,
+    "yearFounded": 2019
+  },
+  {
+    "id": "p007",
+    "name": "NetFabric Systems",
+    "description": "Enterprise networking and SD-WAN specialist providing modern network infrastructure for distributed organizations. Expert in SASE, network automation, and edge computing deployments.",
+    "solutions": ["SD-WAN Deployment", "SASE Architecture", "Network Automation", "Edge Computing", "5G Private Networks", "Network as Code"],
+    "capabilities": ["Cisco", "Palo Alto Prisma", "VMware VeloCloud", "Aruba", "Ansible Network", "Batfish", "Nautobot", "YANG/NETCONF"],
+    "industries": ["Retail", "Manufacturing", "Healthcare", "Logistics", "Hospitality"],
+    "useCases": [
+      "SASE rollout across 5,000 retail locations for a national restaurant chain reducing network costs by 35%",
+      "Private 5G network for a smart factory enabling real-time IoT data processing at the edge",
+      "Network automation platform managing 10,000+ devices for a healthcare system across 50 hospitals"
+    ],
+    "certifications": ["Cisco Gold Partner", "Palo Alto NextWave Diamond", "VMware Principal Partner"],
+    "tier": "Gold",
+    "website": "https://netfabric.example.com",
+    "contactEmail": "partnerships@netfabric.example.com",
+    "headquarters": "Dallas, TX",
+    "employeeCount": 2000,
+    "yearFounded": 2013
+  },
+  {
+    "id": "p008",
+    "name": "Apex Digital Experience",
+    "description": "Digital experience and CX transformation partner building world-class customer-facing platforms. Expertise in headless commerce, content management, and omnichannel engagement.",
+    "solutions": ["Headless Commerce", "Content Management", "Customer Data Platform", "Omnichannel Engagement", "Digital Experience Platform", "Personalization Engine"],
+    "capabilities": ["Salesforce Commerce Cloud", "Adobe Experience Manager", "Contentful", "Segment", "Braze", "Next.js", "React", "GraphQL", "Algolia"],
+    "industries": ["Retail", "CPG", "Media", "Travel", "Financial Services"],
+    "useCases": [
+      "Headless commerce platform for a luxury brand achieving 3x conversion rate improvement across web and mobile",
+      "CDP implementation unifying 50M customer profiles across 12 touchpoints for a CPG company",
+      "Personalization engine delivering real-time product recommendations increasing AOV by 25%"
+    ],
+    "certifications": ["Salesforce Crest Partner", "Adobe Platinum Partner", "Contentful Premium Partner"],
+    "tier": "Gold",
+    "website": "https://apexdx.example.com",
+    "contactEmail": "partnerships@apexdx.example.com",
+    "headquarters": "Los Angeles, CA",
+    "employeeCount": 1800,
+    "yearFounded": 2014
+  },
+  {
+    "id": "p009",
+    "name": "GreenOps Sustainability Tech",
+    "description": "Sustainability and ESG technology consultancy helping enterprises measure, reduce, and report their environmental impact. Specializes in carbon accounting platforms and sustainable IT strategies.",
+    "solutions": ["Carbon Accounting Platform", "ESG Reporting", "Sustainable IT Strategy", "Green Cloud Optimization", "Circular Economy Solutions", "Supply Chain Sustainability"],
+    "capabilities": ["Salesforce Net Zero", "SAP Sustainability", "Microsoft Cloud for Sustainability", "LCA Tools", "GHG Protocol", "TCFD", "CSRD Compliance"],
+    "industries": ["Energy", "Manufacturing", "Financial Services", "Retail", "Logistics"],
+    "useCases": [
+      "Enterprise carbon accounting platform tracking Scope 1-3 emissions across 200 facilities for an energy company",
+      "Green cloud migration reducing IT carbon footprint by 45% for a global bank",
+      "Supply chain sustainability scoring system evaluating 10,000+ suppliers for a retailer"
+    ],
+    "certifications": ["B Corp Certified", "CDP Gold Partner", "Science Based Targets Partner"],
+    "tier": "Silver",
+    "website": "https://greenops.example.com",
+    "contactEmail": "partnerships@greenops.example.com",
+    "headquarters": "Seattle, WA",
+    "employeeCount": 600,
+    "yearFounded": 2020
+  },
+  {
+    "id": "p010",
+    "name": "IronClad Compliance",
+    "description": "Regulatory compliance and risk management technology partner specializing in financial services and healthcare compliance. Deep expertise in automated compliance monitoring and regulatory reporting.",
+    "solutions": ["Automated Compliance Monitoring", "Regulatory Reporting", "Risk Assessment Platform", "KYC/AML Solutions", "HIPAA Compliance", "Audit Management"],
+    "capabilities": ["ServiceNow GRC", "Archer", "OneTrust", "Palantir", "Riskonnect", "RegTech APIs", "Smart Contracts", "RPA for Compliance"],
+    "industries": ["Financial Services", "Healthcare", "Insurance", "Pharmaceuticals", "Government"],
+    "useCases": [
+      "Automated AML monitoring system processing 5M+ daily transactions for a multinational bank",
+      "HIPAA compliance platform for a health system managing PHI across 100+ facilities",
+      "Real-time regulatory change management tracking 500+ regulations across 30 jurisdictions"
+    ],
+    "certifications": ["SOC 2 Type II", "HITRUST CSF", "ISO 27701", "PCI DSS QSA"],
+    "tier": "Gold",
+    "website": "https://ironclad.example.com",
+    "contactEmail": "partnerships@ironclad.example.com",
+    "headquarters": "Charlotte, NC",
+    "employeeCount": 1500,
+    "yearFounded": 2011
+  },
+  {
+    "id": "p011",
+    "name": "Agile Workforce Solutions",
+    "description": "HR technology and workforce transformation partner helping enterprises modernize talent management, employee experience, and workforce analytics with AI-driven insights.",
+    "solutions": ["HCM Implementation", "Workforce Analytics", "Employee Experience Platform", "Talent Acquisition AI", "Learning & Development", "HR Process Automation"],
+    "capabilities": ["Workday", "SuccessFactors", "ServiceNow HRSD", "Eightfold AI", "Cornerstone", "Power Platform", "People Analytics", "RPA"],
+    "industries": ["Technology", "Financial Services", "Healthcare", "Retail", "Manufacturing"],
+    "useCases": [
+      "Workday HCM global rollout for a tech company with 80,000 employees across 40 countries",
+      "AI-powered talent marketplace reducing internal hiring time by 60% for a Fortune 500",
+      "People analytics platform identifying attrition risk with 88% accuracy for a healthcare system"
+    ],
+    "certifications": ["Workday Adaptive Partner", "SAP SuccessFactors Gold", "ServiceNow Elite Partner"],
+    "tier": "Silver",
+    "website": "https://agileworkforce.example.com",
+    "contactEmail": "partnerships@agileworkforce.example.com",
+    "headquarters": "Atlanta, GA",
+    "employeeCount": 2200,
+    "yearFounded": 2009
+  },
+  {
+    "id": "p012",
+    "name": "BlockForge Digital",
+    "description": "Blockchain and Web3 enterprise solutions partner building decentralized applications, tokenization platforms, and smart contract solutions for regulated industries.",
+    "solutions": ["Enterprise Blockchain", "Asset Tokenization", "Smart Contracts", "Decentralized Identity", "Supply Chain Traceability", "Digital Currency Solutions"],
+    "capabilities": ["Hyperledger Fabric", "Ethereum", "Polygon", "R3 Corda", "IPFS", "Solidity", "Chainlink", "Zero-Knowledge Proofs"],
+    "industries": ["Financial Services", "Supply Chain", "Healthcare", "Government", "Real Estate"],
+    "useCases": [
+      "Trade finance platform on Hyperledger reducing settlement time from 5 days to 4 hours for a consortium of 20 banks",
+      "Pharmaceutical supply chain traceability system tracking 50M+ units from manufacturer to patient",
+      "Real estate tokenization platform enabling fractional ownership of $500M+ commercial properties"
+    ],
+    "certifications": ["Hyperledger Certified Partner", "AWS Blockchain Competency", "R3 Corda Partner"],
+    "tier": "Silver",
+    "website": "https://blockforge.example.com",
+    "contactEmail": "partnerships@blockforge.example.com",
+    "headquarters": "Miami, FL",
+    "employeeCount": 450,
+    "yearFounded": 2018
+  },
+  {
+    "id": "p013",
+    "name": "Meridian IoT Solutions",
+    "description": "Industrial IoT and smart infrastructure partner enabling digital twins, predictive maintenance, and connected operations for asset-heavy industries.",
+    "solutions": ["Industrial IoT Platform", "Digital Twin", "Predictive Maintenance", "Connected Operations", "Smart Building", "Fleet Management"],
+    "capabilities": ["Azure IoT Hub", "AWS IoT Core", "PTC ThingWorx", "Siemens MindSphere", "MQTT", "OPC-UA", "Edge AI", "Time Series Databases"],
+    "industries": ["Manufacturing", "Energy", "Utilities", "Transportation", "Mining"],
+    "useCases": [
+      "Predictive maintenance platform monitoring 50,000 industrial assets reducing unplanned downtime by 70%",
+      "Digital twin of a $2B chemical plant enabling real-time process optimization",
+      "Connected fleet management for 15,000 vehicles reducing fuel costs by 20%"
+    ],
+    "certifications": ["PTC Premier Partner", "Siemens Solution Partner", "AWS IoT Competency"],
+    "tier": "Gold",
+    "website": "https://meridianiot.example.com",
+    "contactEmail": "partnerships@meridianiot.example.com",
+    "headquarters": "Detroit, MI",
+    "employeeCount": 1100,
+    "yearFounded": 2015
+  },
+  {
+    "id": "p014",
+    "name": "Prism Integration Services",
+    "description": "Enterprise integration and API management specialist connecting complex IT ecosystems. Expert in iPaaS, event-driven architecture, and legacy system modernization through APIs.",
+    "solutions": ["API Management", "iPaaS Implementation", "Event-Driven Architecture", "Legacy Modernization", "B2B Integration", "Data Integration"],
+    "capabilities": ["MuleSoft", "Boomi", "Apigee", "Kong", "Apache Kafka", "RabbitMQ", "GraphQL Federation", "gRPC", "AsyncAPI"],
+    "industries": ["Financial Services", "Healthcare", "Retail", "Telecom", "Insurance"],
+    "useCases": [
+      "API-first modernization of 200+ legacy COBOL services for a top-5 US bank",
+      "Event-driven architecture processing 1M+ events/second for a real-time payments platform",
+      "Healthcare interoperability platform connecting 500+ providers via HL7 FHIR APIs"
+    ],
+    "certifications": ["MuleSoft Premier Partner", "Boomi Elite Partner", "Kong Enterprise Partner"],
+    "tier": "Gold",
+    "website": "https://prismintegration.example.com",
+    "contactEmail": "partnerships@prismintegration.example.com",
+    "headquarters": "Denver, CO",
+    "employeeCount": 1600,
+    "yearFounded": 2012
+  },
+  {
+    "id": "p015",
+    "name": "Titan ServiceOps",
+    "description": "IT service management and operations partner specializing in ServiceNow implementations, AIOps, and IT operations modernization for large enterprises.",
+    "solutions": ["ServiceNow Implementation", "AIOps Platform", "ITSM Modernization", "IT Operations Automation", "Enterprise Service Management", "Observability Platform"],
+    "capabilities": ["ServiceNow", "Splunk", "Datadog", "PagerDuty", "Dynatrace", "Elastic", "Ansible", "BMC Helix", "AI/ML for Ops"],
+    "industries": ["Financial Services", "Technology", "Healthcare", "Telecom", "Government"],
+    "useCases": [
+      "ServiceNow ITSM/ITOM enterprise rollout for a bank with 100,000 employees reducing ticket resolution by 50%",
+      "AIOps implementation correlating alerts from 15 monitoring tools reducing MTTR by 65%",
+      "Full-stack observability platform for a SaaS company monitoring 5,000 microservices"
+    ],
+    "certifications": ["ServiceNow Elite Partner", "Splunk Premier Partner", "Datadog Premier Partner"],
+    "tier": "Platinum",
+    "website": "https://titanserviceops.example.com",
+    "contactEmail": "partnerships@titanserviceops.example.com",
+    "headquarters": "Minneapolis, MN",
+    "employeeCount": 4000,
+    "yearFounded": 2008
+  }
+]
