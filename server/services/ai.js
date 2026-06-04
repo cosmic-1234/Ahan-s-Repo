@@ -1,52 +1,42 @@
-const claude = require('./claude');
 const gemini = require('./gemini');
 
-const hasGemini = !!process.env.GEMINI_API_KEY;
-const hasClaude = !!process.env.ANTHROPIC_API_KEY;
+// Helper to delay execution
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-console.log(`AI Dispatcher Initialized: Gemini: ${hasGemini ? 'Configured ✓' : 'NOT SET ✗'}, Claude: ${hasClaude ? 'Configured ✓' : 'NOT SET ✗'}`);
-
-async function callWithFallback(serviceMethod, ...args) {
-  const providers = [];
-  
-  // Try Gemini first if configured (to utilize free tier)
-  if (hasGemini) {
-    providers.push({ name: 'gemini', impl: gemini });
-  }
-  // Try Claude second if configured (or first if Gemini is not set)
-  if (hasClaude) {
-    providers.push({ name: 'claude', impl: claude });
-  }
-  
-  // Default fallback: if no key is configured, put gemini in so it fails with a clear setup error
-  if (providers.length === 0) {
-    providers.push({ name: 'gemini', impl: gemini });
-  }
-
-  let lastError = null;
-  for (let i = 0; i < providers.length; i++) {
-    const provider = providers[i];
+async function retryWithBackoff(fn, serviceMethod, maxRetries = 4, initialDelay = 1500) {
+  let attempt = 0;
+  while (attempt < maxRetries) {
     try {
-      console.log(`[AI Dispatcher] Invoking method '${serviceMethod}' via '${provider.name}'...`);
-      const result = await provider.impl[serviceMethod](...args);
-      console.log(`[AI Dispatcher] Method '${serviceMethod}' succeeded via '${provider.name}'`);
-      return result;
-    } catch (err) {
-      console.error(`[AI Dispatcher] Method '${serviceMethod}' failed via '${provider.name}'. Error: ${err.message}`);
-      lastError = err;
-      if (i < providers.length - 1) {
-        console.warn(`[AI Dispatcher] Attempting failover to secondary provider '${providers[i + 1].name}'...`);
+      return await fn();
+    } catch (error) {
+      attempt++;
+      const errorMessage = error.message || '';
+      // Check if it is a rate limit or transient error
+      const isRateLimit = errorMessage.includes('429') || errorMessage.includes('Quota exceeded') || errorMessage.includes('Rate limit');
+      const isTransient = errorMessage.includes('503') || errorMessage.includes('Service Unavailable') || errorMessage.includes('timeout') || errorMessage.includes('fetch failed');
+      
+      if (attempt >= maxRetries) {
+        console.error(`[AI Dispatcher] Method '${serviceMethod}' failed after ${attempt} attempts.`);
+        throw error;
       }
+      
+      // Calculate delay with exponential backoff (e.g. 1.5s, 3s, 6s, 12s)
+      const delay = initialDelay * Math.pow(2, attempt - 1);
+      console.warn(`[AI Dispatcher] Method '${serviceMethod}' attempt ${attempt} failed: ${errorMessage}. Retrying in ${delay}ms...`);
+      await sleep(delay);
     }
   }
-  
-  throw lastError || new Error(`No AI provider was able to handle method '${serviceMethod}'`);
+}
+
+async function invokeGemini(serviceMethod, ...args) {
+  console.log(`[AI Dispatcher] Invoking method '${serviceMethod}' via Google Gemini (with retries)...`);
+  return await retryWithBackoff(() => gemini[serviceMethod](...args), serviceMethod);
 }
 
 module.exports = {
-  analyzeProblem: async (...args) => callWithFallback('analyzeProblem', ...args),
-  extractDocument: async (...args) => callWithFallback('extractDocument', ...args),
-  comparePartners: async (...args) => callWithFallback('comparePartners', ...args),
-  addPartnerFromText: async (...args) => callWithFallback('addPartnerFromText', ...args),
-  activeProviderName: hasGemini ? 'gemini' : (hasClaude ? 'claude' : 'gemini')
+  analyzeProblem: async (...args) => invokeGemini('analyzeProblem', ...args),
+  extractDocument: async (...args) => invokeGemini('extractDocument', ...args),
+  comparePartners: async (...args) => invokeGemini('comparePartners', ...args),
+  addPartnerFromText: async (...args) => invokeGemini('addPartnerFromText', ...args),
+  activeProviderName: 'gemini'
 };

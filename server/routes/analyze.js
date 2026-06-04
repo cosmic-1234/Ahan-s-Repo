@@ -84,21 +84,31 @@ router.post('/document', upload.single('document'), async (req, res) => {
       return res.status(400).json({ error: 'Could not extract sufficient text from the document' });
     }
 
-    // Step 2: Use Claude/Gemini to extract structured information
+    // Step 2: Use Google Gemini to extract structured information
     const extraction = await extractDocument(documentText);
+
+    if (!extraction) {
+      return res.status(400).json({ error: 'AI document extraction failed. Please ensure the document is not empty or corrupted.' });
+    }
+
+    const safeJoin = (val) => {
+      if (Array.isArray(val)) return val.join('; ');
+      if (typeof val === 'string') return val;
+      return 'Not specified';
+    };
 
     // Step 3: Build problem text from extraction
     const problemText = `
 Client: ${extraction.clientName || 'Not specified'}
-Problem: ${extraction.problemStatement || extraction.summary}
-Business Challenges: ${(extraction.businessChallenges || []).join('; ')}
-Technical Requirements: ${(extraction.technicalRequirements || []).join('; ')}
+Problem: ${extraction.problemStatement || extraction.summary || 'Not specified'}
+Business Challenges: ${safeJoin(extraction.businessChallenges)}
+Technical Requirements: ${safeJoin(extraction.technicalRequirements)}
 Industry: ${extraction.industry || 'Not specified'}
 Domain: ${extraction.domain || 'Not specified'}
 Budget: ${extraction.budgetInfo || 'Not specified'}
 Timeline: ${extraction.timelineInfo || 'Not specified'}
-Technology Preferences: ${(extraction.technologyPreferences || []).join('; ')}
-Success Criteria: ${(extraction.successCriteria || []).join('; ')}
+Technology Preferences: ${safeJoin(extraction.technologyPreferences)}
+Success Criteria: ${safeJoin(extraction.successCriteria)}
     `.trim();
 
     // Step 4: Analyze against partners

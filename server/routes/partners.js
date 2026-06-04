@@ -238,6 +238,10 @@ router.post('/add-partner-document', upload.single('document'), async (req, res)
     // 2. Call AI service to add partner
     const partnerProfile = await addPartnerFromText(documentText);
 
+    if (!partnerProfile || !partnerProfile.name || typeof partnerProfile.name !== 'string') {
+      return res.status(400).json({ error: 'AI profiling did not extract a valid partner name from the document. Please ensure the document contains the partner name.' });
+    }
+
     // Force "Manufacturing" industry to align with strictly manufacturing scope
     partnerProfile.industries = ['Manufacturing'];
 
@@ -247,7 +251,7 @@ router.post('/add-partner-document', upload.single('document'), async (req, res)
     
     // Check if partner already exists by name (case-insensitive)
     const existingIndex = existingPartners.findIndex(
-      e => e.name.toLowerCase() === partnerProfile.name.toLowerCase()
+      e => e.name && typeof e.name === 'string' && e.name.toLowerCase() === partnerProfile.name.toLowerCase()
     );
     if (existingIndex >= 0) {
       partnerProfile.id = existingPartners[existingIndex].id;
