@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const AdmZip = require('adm-zip');
 
-async function parsePPTX(buffer) {
+async function parsePPTX(filePath) {
   try {
-    const zip = new AdmZip(buffer);
+    const zip = new AdmZip(filePath);
     const zipEntries = zip.getEntries();
     
     // Sort slide files (ppt/slides/slide1.xml, ppt/slides/slide2.xml, etc.)
@@ -40,48 +40,50 @@ async function parsePPTX(buffer) {
   }
 }
 
-async function parsePDF(buffer) {
+async function parsePDF(filePath) {
   const pdfParse = require('pdf-parse');
-  const data = await pdfParse(buffer);
+  const buffer = fs.readFileSync(filePath);
+  // Limit to first 50 pages of the capability deck to prevent OOM errors on Render Free Tier
+  const data = await pdfParse(buffer, { max: 50 });
   return data.text;
 }
 
-async function parseDOCX(buffer) {
+async function parseDOCX(filePath) {
   const mammoth = require('mammoth');
-  const result = await mammoth.extractRawText({ buffer });
+  const result = await mammoth.extractRawText({ path: filePath });
   return result.value;
 }
 
-function parseTXT(buffer) {
-  return buffer.toString('utf-8');
+function parseTXT(filePath) {
+  return fs.readFileSync(filePath, 'utf-8');
 }
 
-async function parseDocument(buffer, mimetype, originalname) {
+async function parseDocument(filePath, mimetype, originalname) {
   const ext = path.extname(originalname).toLowerCase();
 
   if (mimetype === 'application/pdf' || ext === '.pdf') {
-    return await parsePDF(buffer);
+    return await parsePDF(filePath);
   } else if (
     mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
     ext === '.docx'
   ) {
-    return await parseDOCX(buffer);
+    return await parseDOCX(filePath);
   } else if (
     mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
     ext === '.pptx' ||
     ext === '.ppt'
   ) {
-    return await parsePPTX(buffer);
+    return await parsePPTX(filePath);
   } else if (mimetype === 'text/plain' || ext === '.txt') {
-    return parseTXT(buffer);
+    return parseTXT(filePath);
   } else {
     throw new Error(`Unsupported file type: ${mimetype || ext}`);
   }
 }
 
-function parseSpreadsheet(buffer, originalname) {
+function parseSpreadsheet(filePath, originalname) {
   const XLSX = require('xlsx');
-  const workbook = XLSX.read(buffer, { type: 'buffer' });
+  const workbook = XLSX.readFile(filePath);
   const sheetName = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
   const rows = XLSX.utils.sheet_to_json(sheet);

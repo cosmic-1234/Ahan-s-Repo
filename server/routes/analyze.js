@@ -9,7 +9,24 @@ const { parseDocument } = require('../services/documentParser');
 
 const PARTNERS_PATH = path.join(__dirname, '..', 'data', 'partners.json');
 const ANALYSES_PATH = path.join(__dirname, '..', 'data', 'analyses.json');
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
+const tempDir = path.join(__dirname, '..', 'temp');
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, tempDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${uuidv4()}_${file.originalname}`);
+  }
+});
+
+const upload = multer({ 
+  storage, 
+  limits: { fileSize: 250 * 1024 * 1024 } // Support up to 250MB uploads
+});
 
 function readPartners() {
   return JSON.parse(fs.readFileSync(PARTNERS_PATH, 'utf-8'));
@@ -66,7 +83,15 @@ router.post('/document', upload.single('document'), async (req, res) => {
     }
 
     // Step 1: Extract text from document
-    const documentText = await parseDocument(req.file.buffer, req.file.mimetype, req.file.originalname);
+    let documentText;
+    try {
+      documentText = await parseDocument(req.file.path, req.file.mimetype, req.file.originalname);
+    } finally {
+      // Ensure file is deleted from temp directory immediately
+      if (fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+    }
 
     if (!documentText || documentText.trim().length < 20) {
       return res.status(400).json({ error: 'Could not extract sufficient text from the document' });
