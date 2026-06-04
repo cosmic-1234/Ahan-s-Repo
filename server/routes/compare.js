@@ -31,6 +31,19 @@ router.post('/', async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error('Comparison error:', error);
+    const isRateLimit = error.message && (
+      error.message.includes('429') ||
+      error.message.includes('rate limit') ||
+      error.message.includes('quota') ||
+      error.message.includes('tokens per day')
+    );
+    if (isRateLimit) {
+      return res.status(503).json({
+        error: 'AI service temporarily unavailable',
+        details: 'The AI provider has reached its daily usage limit. Please try again in a few hours.',
+        code: 'RATE_LIMIT_EXCEEDED'
+      });
+    }
     res.status(500).json({ error: 'Comparison failed', details: error.message });
   }
 });

@@ -46,9 +46,10 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    apiKeyConfigured: !!process.env.GROQ_API_KEY,
+    apiKeyConfigured: !!(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY),
     activeProvider: activeProviderName,
-    groqConfigured: !!process.env.GROQ_API_KEY
+    groqConfigured: !!process.env.GROQ_API_KEY,
+    geminiConfigured: !!process.env.GEMINI_API_KEY,
   });
 });
 
@@ -68,6 +69,7 @@ app.listen(PORT, async () => {
   console.log(`  ────────────────────────────────────`);
   console.log(`  Running on: http://localhost:${PORT}`);
   console.log(`  Groq (Llama 3.3 70B): ${process.env.GROQ_API_KEY ? 'Configured ✓' : 'NOT SET ✗'}`);
+  console.log(`  Gemini (Flash 2.0):   ${process.env.GEMINI_API_KEY ? 'Configured ✓ (fallback)' : 'NOT SET (optional fallback)'}`);
   console.log(`  Active Provider:      ${activeProviderName.toUpperCase()} ⚡`);
   console.log(`  Database Mode:      ${useMongo ? 'MongoDB 🗄️' : 'Local JSON Files 📁'}`);
   

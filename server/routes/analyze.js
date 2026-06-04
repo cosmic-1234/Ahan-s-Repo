@@ -58,6 +58,19 @@ router.post('/text', async (req, res) => {
     res.json(analysis);
   } catch (error) {
     console.error('Analysis error:', error);
+    const isRateLimit = error.message && (
+      error.message.includes('429') ||
+      error.message.includes('rate limit') ||
+      error.message.includes('quota') ||
+      error.message.includes('tokens per day')
+    );
+    if (isRateLimit) {
+      return res.status(503).json({
+        error: 'AI service temporarily unavailable',
+        details: 'The AI provider has reached its daily usage limit. Please try again in a few hours, or contact your administrator to configure an additional API key.',
+        code: 'RATE_LIMIT_EXCEEDED'
+      });
+    }
     res.status(500).json({ error: 'Analysis failed', details: error.message });
   }
 });
@@ -140,6 +153,19 @@ Success Criteria: ${safeJoin(extraction.successCriteria)}
     res.json(analysis);
   } catch (error) {
     console.error('Document analysis error:', error);
+    const isRateLimit = error.message && (
+      error.message.includes('429') ||
+      error.message.includes('rate limit') ||
+      error.message.includes('quota') ||
+      error.message.includes('tokens per day')
+    );
+    if (isRateLimit) {
+      return res.status(503).json({
+        error: 'AI service temporarily unavailable',
+        details: 'The AI provider has reached its daily usage limit. Please try again in a few hours.',
+        code: 'RATE_LIMIT_EXCEEDED'
+      });
+    }
     res.status(500).json({ error: 'Document analysis failed', details: error.message });
   }
 });

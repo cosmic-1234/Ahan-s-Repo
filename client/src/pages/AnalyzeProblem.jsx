@@ -39,7 +39,13 @@ export default function AnalyzeProblem() {
         body: JSON.stringify({ problemText, industry: 'Manufacturing' }),
         signal: controller.signal,
       });
-      if (!response.ok) throw new Error((await response.json()).error || 'Analysis failed');
+      if (!response.ok) {
+        const errData = await response.json();
+        if (response.status === 503 || errData.code === 'RATE_LIMIT_EXCEEDED') {
+          throw new Error('⚠️ AI service is temporarily unavailable (daily usage limit reached). Please try again in a few hours.');
+        }
+        throw new Error(errData.error || 'Analysis failed');
+      }
       const data = await response.json();
       setResult(data);
       toast.success('Analysis Complete', `Found ${data.result?.rankedPartners?.length || 0} matching partners.`);
@@ -75,7 +81,13 @@ export default function AnalyzeProblem() {
         body: formData,
         signal: controller.signal,
       });
-      if (!response.ok) throw new Error((await response.json()).error || 'Document analysis failed');
+      if (!response.ok) {
+        const errData = await response.json();
+        if (response.status === 503 || errData.code === 'RATE_LIMIT_EXCEEDED') {
+          throw new Error('⚠️ AI service is temporarily unavailable (daily usage limit reached). Please try again in a few hours.');
+        }
+        throw new Error(errData.error || 'Document analysis failed');
+      }
       const data = await response.json();
       setResult(data);
       toast.success('Document Analysis Complete', `Extracted requirements and found ${data.result?.rankedPartners?.length || 0} matching partners.`);

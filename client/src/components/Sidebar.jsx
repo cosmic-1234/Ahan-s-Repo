@@ -56,8 +56,15 @@ export default function Sidebar() {
       fetch('/api/health')
         .then(res => res.json())
         .then(data => {
+          const providerName = data.activeProvider?.startsWith('groq')
+            ? 'Groq Llama 3.3'
+            : data.activeProvider === 'gemini'
+            ? 'Gemini'
+            : data.activeProvider === 'claude'
+            ? 'Claude'
+            : (data.activeProvider || 'AI');
           setStatus({
-            provider: data.activeProvider === 'gemini' ? 'Gemini' : 'Claude',
+            provider: providerName,
             connected: data.apiKeyConfigured
           });
         })
