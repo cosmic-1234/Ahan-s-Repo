@@ -1,1 +1,131 @@
-[]
+[
+  {
+    "id": "1ae5452f-20c3-4143-a9ad-0c588dc7840d",
+    "type": "text",
+    "timestamp": "2026-06-04T16:18:06.123Z",
+    "input": {
+      "problemText": "give me the best option",
+      "industry": "Manufacturing"
+    },
+    "result": {
+      "problemSummary": "The client is seeking the best option for their manufacturing needs, without specifying particular requirements or challenges.",
+      "keyRequirements": [
+        "Manufacturing expertise",
+        "Industry-specific solutions"
+      ],
+      "industryContext": "The manufacturing industry is characterized by the need for precision, efficiency, and quality. Partners with experience in smart factory transformation, industrial automation, and supply chain optimization are likely to be a good fit.",
+      "rankedPartners": [
+        {
+          "partnerId": "p_bae4471f",
+          "partnerName": "SteelBridge Industries Ltd.",
+          "fitmentScore": 90,
+          "overallAssessment": "SteelBridge Industries is a strong fit due to their extensive experience in precision manufacturing, structural fabrication, and industrial component supply. Their smart factory transformation programs and manufacturing process improvement frameworks align well with the client's manufacturing needs.",
+          "strengthsMatched": [
+            "Precision Machining",
+            "Structural Fabrication"
+          ],
+          "capabilitiesMatched": [
+            "Industrial Automation",
+            "Supply Chain Optimization"
+          ],
+          "relevantUseCases": [
+            "Bhilai Smart Plant: Implemented MES and supplied equipment for a steel plant"
+          ],
+          "gaps": [
+            "Limited information on their digital transformation capabilities"
+          ],
+          "recommendedApproach": "Engage SteelBridge Industries for their manufacturing expertise and smart factory transformation capabilities, with a focus on precision machining and structural fabrication."
+        },
+        {
+          "partnerId": "p_b2c08056",
+          "partnerName": "Tech Mahindra Smart Factory Services",
+          "fitmentScore": 85,
+          "overallAssessment": "Tech Mahindra Smart Factory Services is a good fit due to their focus on enabling intelligent manufacturing through a curated ecosystem of industry-leading partners. Their solutions, such as MES, predictive maintenance, and digital twin, can improve efficiency and reduce costs in manufacturing.",
+          "strengthsMatched": [
+            "IoT",
+            "SAP"
+          ],
+          "capabilitiesMatched": [
+            "AWS IoT",
+            "Computer Vision"
+          ],
+          "relevantUseCases": [
+            "Implementation of a cloud-native MES for a food processing company"
+          ],
+          "gaps": [
+            "Limited experience in precision manufacturing and structural fabrication"
+          ],
+          "recommendedApproach": "Engage Tech Mahindra Smart Factory Services for their digital transformation capabilities and smart factory solutions, with a focus on IoT, SAP, and AWS IoT."
+        }
+      ],
+      "analysisNotes": "Both partners have strong manufacturing expertise, but SteelBridge Industries has an edge due to their extensive experience in precision manufacturing and structural fabrication. Tech Mahindra Smart Factory Services, on the other hand, excels in digital transformation and smart factory solutions. The client's specific needs will determine the best partner to engage."
+    },
+    "partnerCount": 2
+  },
+  {
+    "id": "202f1b74-e6c4-4217-b1c3-9a1fe44f348d",
+    "type": "text",
+    "timestamp": "2026-06-04T16:06:16.358Z",
+    "input": {
+      "problemText": "give me the best option",
+      "industry": "Manufacturing"
+    },
+    "result": {
+      "problemSummary": "The client is seeking the best option for their manufacturing needs, but the specific requirements are not clearly defined.",
+      "keyRequirements": [
+        "Smart Factory Transformation",
+        "Manufacturing Process Improvement",
+        "Industrial Automation"
+      ],
+      "industryContext": "The manufacturing industry is undergoing significant transformation with the adoption of Industry 4.0 technologies, and companies are looking for partners who can help them improve efficiency, reduce costs, and enhance overall manufacturing performance.",
+      "rankedPartners": [
+        {
+          "partnerId": "p_bae4471f",
+          "partnerName": "SteelBridge Industries Ltd.",
+          "fitmentScore": 90,
+          "overallAssessment": "SteelBridge Industries is a strong fit due to their expertise in precision manufacturing, structural fabrication, and industrial automation, which aligns with the client's manufacturing needs.",
+          "strengthsMatched": [
+            "Precision Machining",
+            "Structural Fabrication",
+            "Industrial Automation"
+          ],
+          "capabilitiesMatched": [
+            "Smart Factory Transformation",
+            "Manufacturing Process Improvement"
+          ],
+          "relevantUseCases": [
+            "Bhilai Smart Plant: Implemented MES and supplied equipment for a steel plant"
+          ],
+          "gaps": [
+            "Limited information on their digital transformation capabilities"
+          ],
+          "recommendedApproach": "Engage SteelBridge Industries for a thorough assessment of the client's manufacturing operations and explore potential opportunities for smart factory transformation and process improvement."
+        },
+        {
+          "partnerId": "p_b2c08056",
+          "partnerName": "Tech Mahindra Smart Factory Services",
+          "fitmentScore": 85,
+          "overallAssessment": "Tech Mahindra Smart Factory Services is a suitable partner due to their focus on enabling intelligent manufacturing through a curated ecosystem of industry-leading partners and their experience in implementing MES and predictive maintenance solutions.",
+          "strengthsMatched": [
+            "IoT",
+            "SAP",
+            "AWS IoT"
+          ],
+          "capabilitiesMatched": [
+            "MES",
+            "Predictive Maintenance"
+          ],
+          "relevantUseCases": [
+            "Implementation of a cloud-native MES for a food processing company"
+          ],
+          "gaps": [
+            "Limited information on their experience in precision manufacturing and structural fabrication"
+          ],
+          "recommendedApproach": "Engage Tech Mahindra Smart Factory Services to explore potential opportunities for digital transformation and smart factory solutions, and assess their ability to meet the client's specific manufacturing needs."
+        }
+      ],
+      "analysisNotes": "Both partners have strong capabilities in the manufacturing industry, but SteelBridge Industries' expertise in precision manufacturing and structural fabrication gives them a slight edge. However, Tech Mahindra Smart Factory Services' focus on digital transformation and smart factory solutions should not be overlooked, and their experience in implementing MES and predictive maintenance solutions could be valuable to the client."
+    },
+    "partnerCount": 2
+  }
+]

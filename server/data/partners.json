@@ -1,1 +1,68 @@
-[]
+[
+  {
+    "name": "SteelBridge Industries Ltd.",
+    "description": "SteelBridge Industries is a heavy engineering conglomerate specializing in precision manufacturing, structural fabrication, and industrial component supply, serving sectors including automotive, oil & gas, power generation, and railways. They deliver smart factory transformation programs and provide manufacturing process improvement frameworks. With a strong focus on quality, they hold ISO 9001:2015 and AS9100D certifications.",
+    "solutions": [
+      "Smart Factory Transformation",
+      "Manufacturing Process Improvement",
+      "Industrial Automation"
+    ],
+    "capabilities": [
+      "Precision Machining",
+      "Structural Fabrication",
+      "Industrial Automation",
+      "Supply Chain Optimization"
+    ],
+    "industries": [
+      "Manufacturing"
+    ],
+    "useCases": [
+      "Bhilai Smart Plant: Implemented MES and supplied equipment for a steel plant",
+      "Nashik EV Assembly: Provided SI and PM fabrication for an electric vehicle assembly line",
+      "HPCL Refinery Unit: Offered consulting and contract manufacturing services for a refinery unit"
+    ],
+    "certifications": [
+      "ISO 9001:2015",
+      "AS9100D"
+    ],
+    "tier": "Gold",
+    "website": "www.steelbridge.in",
+    "contactEmail": "info@steelbridge.in",
+    "headquarters": "Pune, India",
+    "employeeCount": 3200,
+    "yearFounded": 1987,
+    "id": "p_bae4471f"
+  },
+  {
+    "name": "Tech Mahindra Smart Factory Services",
+    "description": "Tech Mahindra Smart Factory Services is a leading provider of smart factory solutions, focusing on enabling intelligent manufacturing through a curated ecosystem of industry-leading partners. They offer a range of services, including connected operations, robotics and automation, and digital transformation. Their solutions aim to improve efficiency, reduce costs, and enhance overall manufacturing performance.",
+    "solutions": [
+      "MES",
+      "Predictive Maintenance",
+      "Digital Twin"
+    ],
+    "capabilities": [
+      "IoT",
+      "SAP",
+      "AWS IoT",
+      "Computer Vision"
+    ],
+    "industries": [
+      "Manufacturing"
+    ],
+    "useCases": [
+      "Implementation of a cloud-native MES for a food processing company, resulting in improved traceability and compliance with regulatory requirements"
+    ],
+    "certifications": [
+      "AWS Advanced Partner",
+      "SAP Gold Partner"
+    ],
+    "tier": "Gold",
+    "website": "https://www.techmahindra.com/",
+    "contactEmail": "info@techmahindra.com",
+    "headquarters": "Mumbai, India",
+    "employeeCount": 125000,
+    "yearFounded": 1986,
+    "id": "p_b2c08056"
+  }
+]
