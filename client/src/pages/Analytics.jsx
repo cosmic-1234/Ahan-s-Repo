@@ -65,7 +65,10 @@ export default function Analytics() {
 
   useEffect(() => {
     fetch('/api/analytics/dashboard')
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error('Failed to fetch analytics data');
+        return r.json();
+      })
       .then(setData)
       .catch(console.error)
       .finally(() => setLoading(false));

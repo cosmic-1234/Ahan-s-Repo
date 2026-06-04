@@ -14,8 +14,11 @@ export default function ComparePartners() {
 
   useEffect(() => {
     fetch('/api/partners')
-      .then(r => r.json())
-      .then(data => setPartners(data.partners))
+      .then(r => {
+        if (!r.ok) throw new Error('Failed to fetch partners');
+        return r.json();
+      })
+      .then(data => setPartners(data.partners || []))
       .catch(console.error)
       .finally(() => setLoadingPartners(false));
   }, []);

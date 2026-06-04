@@ -45,10 +45,12 @@ export default function PartnerDatabase() {
       if (filterCapability) params.set('capability', filterCapability);
 
       const res = await fetch(`/api/partners?${params}`);
+      if (!res.ok) throw new Error('Failed to fetch partners');
       const data = await res.json();
-      setPartners(data.partners);
+      setPartners(data.partners || []);
     } catch (error) {
       toast.error('Error', 'Failed to fetch partners');
+      setPartners([]);
     } finally {
       setLoading(false);
     }
@@ -57,6 +59,7 @@ export default function PartnerDatabase() {
   const fetchFilters = async () => {
     try {
       const res = await fetch('/api/partners/filters');
+      if (!res.ok) throw new Error('Failed to fetch filters');
       const data = await res.json();
       setFilters(data);
     } catch (error) {
