@@ -17,20 +17,20 @@ export default function PartnerDatabase() {
   const [importFile, setImportFile] = useState(null);
   const [profiling, setProfiling] = useState(false);
 
-  const handleProfileDocument = async (file) => {
+  const handleAddPartnerDocument = async (file) => {
     if (!file) return;
     setProfiling(true);
     const formData = new FormData();
     formData.append('document', file);
     try {
-      const res = await fetch('/api/partners/profile-document', { method: 'POST', body: formData });
-      if (!res.ok) throw new Error((await res.json()).error || 'Profiling failed');
+      const res = await fetch('/api/partners/add-partner-document', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error((await res.json()).error || 'Failed to add partner');
       const data = await res.json();
-      toast.success('Partner Profiled', `${data.partner.name} has been automatically profiled and added to the database.`);
+      toast.success('Partner Added', `${data.partner.name} has been automatically added to the database.`);
       fetchPartners();
       fetchFilters();
     } catch (error) {
-      toast.error('Profiling Failed', error.message);
+      toast.error('Failed to Add Partner', error.message);
     } finally {
       setProfiling(false);
     }
@@ -171,15 +171,15 @@ export default function PartnerDatabase() {
         <input
           type="file"
           accept=".pdf,.pptx,.ppt,.docx,.txt"
-          onChange={(e) => handleProfileDocument(e.target.files[0])}
+          onChange={(e) => handleAddPartnerDocument(e.target.files[0])}
           style={{ display: 'none' }}
-          id="profile-document-input"
+          id="add-partner-document-input"
         />
-        <label htmlFor="profile-document-input" className="btn btn-secondary btn-sm" style={{ cursor: 'pointer' }}>
+        <label htmlFor="add-partner-document-input" className="btn btn-secondary btn-sm" style={{ cursor: 'pointer' }}>
           <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor">
             <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd"/>
           </svg>
-          Profile Partner from PDF/PPTX
+          Add Partner from PDF/PPTX
         </label>
 
         {importFile && (
@@ -193,7 +193,7 @@ export default function PartnerDatabase() {
         {profiling && (
           <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span className="spinner-mini" style={{ width: '14px', height: '14px', border: '2px solid var(--color-accent)', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin 1s linear infinite' }}></span>
-            AI is profiling partner deck...
+            AI is profiling and adding partner...
           </span>
         )}
 

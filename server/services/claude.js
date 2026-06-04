@@ -212,26 +212,31 @@ Compare these partners specifically against this client problem. Return a JSON o
   }
 }
 
-async function profilePartnerFromText(documentText) {
+async function addPartnerFromText(documentText) {
   const userMessage = `
 DOCUMENT CONTENT:
 ${documentText.substring(0, 15000)}
 
-Extract the partner profiling information from the document. Return a JSON object with this exact structure:
+You are tasking with profiling a technology partner. Perform the following steps strictly:
+1. Extract the partner's name from the document content.
+2. For any fields not present in the text (like website, contact email, headquarters, employee count, certifications, and year founded), utilize your extensive pre-trained internet/web knowledge base to search, deduce, and populate real-world public details.
+3. CRITICAL: Avoid returning empty arrays, empty strings, or 0 values. If any specific detail is not found in the text or web knowledge, deduce a realistic or average industry value based on the partner's size or profile (do NOT leave them as empty arrays, empty strings, or 0/null/undefined).
+
+Return a JSON object with this exact structure:
 {
   "name": "Full official name of the partner company",
   "description": "Professional 2-3 sentence executive description of their focus areas, value proposition, and solutions",
-  "solutions": ["List of core business solutions, e.g., Supply Chain Optimization, MES, Predictive Maintenance, Digital Twin"],
-  "capabilities": ["List of core technical capabilities or tools, e.g., IoT, Siemens MindSphere, SAP, AWS IoT, Computer Vision"],
+  "solutions": ["List of core business solutions, e.g., Supply Chain Optimization, MES, Predictive Maintenance, Digital Twin. Must NOT be empty."],
+  "capabilities": ["List of core technical capabilities or tools, e.g., IoT, Siemens MindSphere, SAP, AWS IoT, Computer Vision. Must NOT be empty."],
   "industries": ["Manufacturing"],
-  "useCases": ["Brief description of 1-3 successful projects or deploy use cases mentioned"],
-  "certifications": ["List of key partner tiers or certifications, e.g., AWS Advanced Partner, SAP Gold Partner"],
-  "tier": "Gold", // (Must be exactly one of: "Platinum", "Gold", or "Silver". Base this on their size, certifications, or status if mentioned, default to "Silver")
-  "website": "Domain name or URL if mentioned, otherwise empty",
-  "contactEmail": "Contact or partnership email if mentioned, otherwise empty",
-  "headquarters": "City and Country of their main office if mentioned",
-  "employeeCount": 500, // (Estimated or exact number of employees if mentioned, default to 0)
-  "yearFounded": 2012 // (Year founded if mentioned, default to 0)
+  "useCases": ["Brief description of 1-3 successful projects or deployed use cases. Must NOT be empty."],
+  "certifications": ["List of key partner tiers or certifications, e.g., AWS Advanced Partner, SAP Gold Partner. Must NOT be empty."],
+  "tier": "Gold", // (Must be exactly one of: "Platinum", "Gold", or "Silver". Base this on their size, certifications, or status. Do NOT leave empty.)
+  "website": "Official domain name or URL, e.g. www.company.com (Deduce from internet, do NOT leave empty)",
+  "contactEmail": "Contact or partnership email, e.g. info@company.com (Deduce from internet, do NOT leave empty)",
+  "headquarters": "City and Country of their main office, e.g. Detroit, USA (Deduce from internet, do NOT leave empty)",
+  "employeeCount": 500, // (Estimated or exact global employee count, MUST be a positive integer greater than 0. Deduce from internet, do NOT use 0)
+  "yearFounded": 2012 // (Year founded, MUST be a valid 4-digit year. Deduce from internet, do NOT use 0)
 }
 
 Focus strictly on manufacturing-related details, capabilities, and use cases, as this portal is strictly scoped for Manufacturing.`;
@@ -255,4 +260,4 @@ Focus strictly on manufacturing-related details, capabilities, and use cases, as
   }
 }
 
-module.exports = { analyzeProblem, extractDocument, comparePartners, profilePartnerFromText };
+module.exports = { analyzeProblem, extractDocument, comparePartners, addPartnerFromText };

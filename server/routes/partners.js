@@ -193,15 +193,15 @@ router.post('/import', upload.single('file'), (req, res) => {
   }
 });
 
-// POST /api/partners/profile-document - Profile and add a partner from a PDF/PPTX/DOCX document
-router.post('/profile-document', upload.single('document'), async (req, res) => {
+// POST /api/partners/add-partner-document - Add a partner from a PDF/PPTX/DOCX document
+router.post('/add-partner-document', upload.single('document'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No document uploaded' });
     }
 
     const { parseDocument } = require('../services/documentParser');
-    const { profilePartnerFromText } = require('../services/ai');
+    const { addPartnerFromText } = require('../services/ai');
 
     // 1. Extract text from document (PDF/PPTX/DOCX/TXT)
     const documentText = await parseDocument(req.file.buffer, req.file.mimetype, req.file.originalname);
@@ -209,8 +209,8 @@ router.post('/profile-document', upload.single('document'), async (req, res) => 
       return res.status(400).json({ error: 'Could not extract sufficient text from the document.' });
     }
 
-    // 2. Call AI service to profile partner
-    const partnerProfile = await profilePartnerFromText(documentText);
+    // 2. Call AI service to add partner
+    const partnerProfile = await addPartnerFromText(documentText);
 
     // Force "Manufacturing" industry to align with strictly manufacturing scope
     partnerProfile.industries = ['Manufacturing'];
@@ -231,10 +231,10 @@ router.post('/profile-document', upload.single('document'), async (req, res) => 
     }
 
     writePartners(existingPartners);
-    res.json({ message: 'Partner profiled successfully', partner: partnerProfile });
+    res.json({ message: 'Partner added successfully', partner: partnerProfile });
   } catch (error) {
-    console.error('Partner profiling error:', error);
-    res.status(500).json({ error: 'Partner profiling failed', details: error.message });
+    console.error('Partner addition error:', error);
+    res.status(500).json({ error: 'Partner addition failed', details: error.message });
   }
 });
 

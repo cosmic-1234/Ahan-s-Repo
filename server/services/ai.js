@@ -15,6 +15,6 @@ module.exports = {
   analyzeProblem: async (...args) => provider.analyzeProblem(...args),
   extractDocument: async (...args) => provider.extractDocument(...args),
   comparePartners: async (...args) => provider.comparePartners(...args),
-  profilePartnerFromText: async (...args) => provider.profilePartnerFromText(...args),
+  addPartnerFromText: async (...args) => provider.addPartnerFromText(...args),
   activeProviderName
 };
