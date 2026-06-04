@@ -77,20 +77,20 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-header">
-        <div className="sidebar-logo" style={{ background: '#E31B23', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '0px', width: '36px', height: '36px' }}>
-          <svg viewBox="0 0 100 100" width="22" height="22" fill="white">
-            <path d="M15 20h70v15H57.5v45h-15V35H15z" />
-          </svg>
+      <div className="sidebar-header" style={{ padding: 'var(--space-5) var(--space-6)', borderBottom: '1px solid var(--color-surface-border)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+          <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+            <svg viewBox="0 0 120 70" width="46" height="27" style={{ display: 'block' }}>
+              <polygon points="5,24 115,2 115,46 5,68" fill="#E31B23" />
+            </svg>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+            <span style={{ fontSize: '15px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--color-text-primary)', letterSpacing: '0.04em' }}>TECH</span>
+            <span style={{ fontSize: '20px', fontWeight: '600', textTransform: 'lowercase', color: '#E31B23', letterSpacing: '-0.02em', marginTop: '1px' }}>mahindra</span>
+          </div>
         </div>
-        <div>
-          <div className="sidebar-title" style={{ display: 'flex', alignItems: 'center', gap: '2px', letterSpacing: '0.02em' }}>
-            <span style={{ color: '#E31B23', fontWeight: '800' }}>Tech</span>
-            <span style={{ fontWeight: '600' }}>Mahindra</span>
-          </div>
-          <div className="sidebar-subtitle" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: '500', color: 'var(--color-text-muted)' }}>
-            Partner Recommendation
-          </div>
+        <div className="sidebar-subtitle" style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: '700', color: 'var(--color-text-muted)', borderTop: '1px solid var(--color-surface-border)', paddingTop: 'var(--space-2)' }}>
+          Partner Recommendation Portal
         </div>
       </div>
 
