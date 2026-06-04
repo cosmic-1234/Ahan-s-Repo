@@ -1,28 +1,28 @@
 /**
- * Groq AI Service — Llama 3.3 70B
+ * OpenRouter AI Service
  * ─────────────────────────────────────────────────────────────────────────────
- * Free tier: 14,400 req/day, 100,000 tokens/day
- * Token-optimized: compact partner summaries reduce usage by ~70%
- * → Each analysis: ~1,200-1,800 tokens (was 4,500-6,000)
- * → 20 analyses ≈ 30,000 tokens max (well within the 100K limit)
+ * OpenRouter routes to free open-source models with NO daily token limits.
+ * Free tier: per-minute rate limits only (no daily cap that blocks 20+ analyses).
+ *
+ * Primary model : meta-llama/llama-3.3-70b-instruct:free
+ *   → Same model as Groq but routed through OpenRouter's free tier
+ * Fallback model: meta-llama/llama-3.1-8b-instruct:free (smaller, faster fallback)
+ *
+ * Get a FREE key at: https://openrouter.ai/ (no credit card required)
+ * Set env var: OPENROUTER_API_KEY=sk-or-v1-...
  */
 
-const Groq = require('groq-sdk');
+const OPENROUTER_BASE = 'https://openrouter.ai/api/v1/chat/completions';
+const PRIMARY_MODEL   = 'meta-llama/llama-3.3-70b-instruct:free';
+const FALLBACK_MODEL  = 'meta-llama/llama-3.1-8b-instruct:free';
 
-function getClient() {
-  const key = process.env.GROQ_API_KEY;
-  if (!key) return null;
-  return new Groq({ apiKey: key });
-}
-
-const MODEL = 'llama-3.3-70b-versatile';
-
-// ── Compact partner summary (70% fewer tokens) ───────────────────────────
+// ── Compact partner summary (reduces tokens by ~70% vs full JSON) ──────────
 function compactPartner(p) {
   return {
     id:   p.id,
     name: p.name,
     tier: p.tier,
+    hq:   p.headquarters || '',
     solutions:    (p.solutions    || []).slice(0, 5),
     capabilities: (p.capabilities || []).slice(0, 5),
     useCases:     (p.useCases     || []).slice(0, 2),
@@ -30,38 +30,68 @@ function compactPartner(p) {
   };
 }
 
-// ── System prompts (concise) ─────────────────────────────────────────────
-const SYSTEM = {
-  analyze: `You are a Partnership Fitment Analyst for a smart manufacturing IT company. Analyze client problems and match technology partners. Respond in valid JSON only — no markdown, no code fences.`,
-  extract: `You are a document analysis expert. Extract structured information. Respond in valid JSON only — no markdown, no code fences.`,
-  compare: `You are a Partnership Fitment Analyst. Compare technology partners against a problem. Respond in valid JSON only — no markdown, no code fences.`,
-  profile: `You are a corporate partner profiling assistant for manufacturing technology. Respond in valid JSON only — no markdown, no code fences.`,
-};
+// ── Low-level chat wrapper ────────────────────────────────────────────────
+async function chat(systemPrompt, userMessage, model = PRIMARY_MODEL) {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) throw new Error('OPENROUTER_API_KEY is not set');
 
-async function chat(systemPrompt, userMessage) {
-  const client = getClient();
-  if (!client) throw new Error('GROQ_API_KEY is not set');
-
-  const response = await client.chat.completions.create({
-    model: MODEL,
-    temperature: 0.3,
-    max_tokens: 2048,
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user',   content: userMessage  },
-    ],
+  const response = await fetch(OPENROUTER_BASE, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type':  'application/json',
+      'HTTP-Referer':  'https://ahan-s-repo.onrender.com',
+      'X-Title':       'Partnership Fitment Agent',
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0.3,
+      max_tokens:  2048,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userMessage  },
+      ],
+    }),
   });
 
-  const text = (response.choices[0]?.message?.content || '').trim();
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`OpenRouter ${response.status}: ${errText}`);
+  }
+
+  const json = await response.json();
+
+  // Handle OpenRouter free-model rate limit (429)
+  if (json.error) {
+    throw new Error(`OpenRouter error: ${JSON.stringify(json.error)}`);
+  }
+
+  const text = (json.choices?.[0]?.message?.content || '').trim();
   const clean = text.replace(/^```(?:json)?/m, '').replace(/```$/m, '').trim();
   try {
     return JSON.parse(clean);
   } catch {
     const match = clean.match(/\{[\s\S]*\}/);
     if (match) return JSON.parse(match[0]);
-    throw new Error('Groq response was not valid JSON: ' + clean.slice(0, 200));
+    // Try fallback model if parse fails
+    if (model === PRIMARY_MODEL) {
+      console.warn('[OpenRouter] Parse failed on primary model, retrying with fallback...');
+      return chat(systemPrompt, userMessage, FALLBACK_MODEL);
+    }
+    throw new Error('OpenRouter response was not valid JSON');
   }
 }
+
+// ── System prompts (concise to save tokens) ──────────────────────────────
+const SYSTEM = {
+  analyze: `You are a Partnership Fitment Analyst for a smart manufacturing IT company. Analyze client problems and match them to the best technology partners. Respond in valid JSON only — no markdown, no code fences.`,
+
+  extract: `You are a document analysis expert. Extract structured information from documents. Respond in valid JSON only — no markdown, no code fences.`,
+
+  compare: `You are a Partnership Fitment Analyst. Compare technology partners against a client problem. Respond in valid JSON only — no markdown, no code fences.`,
+
+  profile: `You are a corporate partner profiling assistant for manufacturing technology. Extract partner information from documents. Respond in valid JSON only — no markdown, no code fences.`,
+};
 
 // ── analyzeProblem ───────────────────────────────────────────────────────
 async function analyzeProblem(problemText, partners, options = {}) {
@@ -74,7 +104,7 @@ ${industry ? `INDUSTRY: ${industry}` : ''}${urgency ? ` | URGENCY: ${urgency}` :
 PARTNERS:
 ${JSON.stringify(partnerList)}
 
-Return JSON:
+Return JSON matching this schema exactly:
 {
   "problemSummary": "string",
   "keyRequirements": ["string"],
@@ -144,7 +174,7 @@ Return JSON:
       "riskFactors": ["string"],
       "engagementApproach": "string",
       "estimatedTimeline": "string",
-      "dimensionScores": {}
+      "dimensionScores": { "dimension": score }
     }
   ],
   "overallRecommendation": {
@@ -165,7 +195,7 @@ ${documentText.substring(0, 20000)}
 Extract partner profile. Return JSON:
 {
   "name": "string",
-  "description": "2-3 sentence executive summary",
+  "description": "string (2-3 sentences)",
   "solutions": ["string"],
   "capabilities": ["string"],
   "industries": ["Manufacturing"],

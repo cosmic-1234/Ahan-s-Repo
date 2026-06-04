@@ -56,7 +56,9 @@ export default function Sidebar() {
       fetch('/api/health')
         .then(res => res.json())
         .then(data => {
-          const providerName = data.activeProvider?.startsWith('groq')
+          const providerName = data.activeProvider?.startsWith('openrouter')
+            ? 'OpenRouter Llama 3.3'
+            : data.activeProvider?.startsWith('groq')
             ? 'Groq Llama 3.3'
             : data.activeProvider === 'gemini'
             ? 'Gemini'
