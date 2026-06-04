@@ -18,6 +18,8 @@ export default function AnalyzeProblem() {
   // Document input state
   const [file, setFile] = useState(null);
 
+  const [loadingMsg, setLoadingMsg] = useState('Analyzing...');
+
   const handleTextAnalysis = async () => {
     if (problemText.trim().length < 10) {
       toast.warning('Insufficient Input', 'Please provide a more detailed problem description.');
@@ -25,19 +27,31 @@ export default function AnalyzeProblem() {
     }
     setLoading(true);
     setResult(null);
+    setLoadingMsg('Analyzing...');
+    // Show warm-up message after 10s (Render free tier cold start)
+    const warmupTimer = setTimeout(() => setLoadingMsg('Server is warming up, please wait...'), 10000);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
     try {
       const response = await fetch('/api/analyze/text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ problemText, industry: 'Manufacturing' }),
+        signal: controller.signal,
       });
       if (!response.ok) throw new Error((await response.json()).error || 'Analysis failed');
       const data = await response.json();
       setResult(data);
       toast.success('Analysis Complete', `Found ${data.result?.rankedPartners?.length || 0} matching partners.`);
     } catch (error) {
-      toast.error('Analysis Failed', error.message);
+      if (error.name === 'AbortError') {
+        toast.error('Timeout', 'Server took too long to respond. Please try again.');
+      } else {
+        toast.error('Analysis Failed', error.message);
+      }
     } finally {
+      clearTimeout(warmupTimer);
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };
@@ -49,20 +63,31 @@ export default function AnalyzeProblem() {
     }
     setLoading(true);
     setResult(null);
+    setLoadingMsg('Analyzing document...');
+    const warmupTimer = setTimeout(() => setLoadingMsg('Server is warming up, please wait...'), 10000);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000);
     try {
       const formData = new FormData();
       formData.append('document', file);
       const response = await fetch('/api/analyze/document', {
         method: 'POST',
         body: formData,
+        signal: controller.signal,
       });
       if (!response.ok) throw new Error((await response.json()).error || 'Document analysis failed');
       const data = await response.json();
       setResult(data);
       toast.success('Document Analysis Complete', `Extracted requirements and found ${data.result?.rankedPartners?.length || 0} matching partners.`);
     } catch (error) {
-      toast.error('Document Analysis Failed', error.message);
+      if (error.name === 'AbortError') {
+        toast.error('Timeout', 'Server took too long to respond. Please try again.');
+      } else {
+        toast.error('Document Analysis Failed', error.message);
+      }
     } finally {
+      clearTimeout(warmupTimer);
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };
@@ -243,7 +268,14 @@ export default function AnalyzeProblem() {
       )}
 
       {/* Loading State */}
-      {loading && <LoadingState type="processing" />}
+      {loading && (
+        <div style={{ textAlign: 'center', padding: 'var(--space-8)' }}>
+          <LoadingState type="processing" />
+          <p style={{ marginTop: 'var(--space-4)', color: 'var(--text-secondary)', fontSize: '0.9rem', animation: 'pulse 1.5s ease-in-out infinite' }}>
+            {loadingMsg}
+          </p>
+        </div>
+      )}
 
       {/* Results */}
       {result && !loading && (
