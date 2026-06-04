@@ -62,14 +62,24 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   const { activeProviderName } = require('./services/ai');
+  const { useMongo, getPartners } = require('./services/db');
   console.log(`\n  Partnership Fitment Agent API Server`);
   console.log(`  ────────────────────────────────────`);
   console.log(`  Running on: http://localhost:${PORT}`);
   console.log(`  Claude (Anthropic): ${process.env.ANTHROPIC_API_KEY ? 'Configured ✓' : 'NOT SET ✗'}`);
   console.log(`  Gemini (Google):    ${process.env.GEMINI_API_KEY ? 'Configured ✓' : 'NOT SET ✗'}`);
   console.log(`  Active Provider:    ${activeProviderName.toUpperCase()} ⚡`);
+  console.log(`  Database Mode:      ${useMongo ? 'MongoDB 🗄️' : 'Local JSON Files 📁'}`);
+  
+  if (useMongo) {
+    try {
+      await getPartners();
+    } catch (e) {
+      console.error('  MongoDB connection test failed:', e.message);
+    }
+  }
   console.log(`  Data dir:           ${dataDir}`);
   console.log('');
 });

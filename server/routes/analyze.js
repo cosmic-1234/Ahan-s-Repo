@@ -6,9 +6,8 @@ const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const { analyzeProblem, extractDocument } = require('../services/ai');
 const { parseDocument } = require('../services/documentParser');
+const { getPartners, getAnalyses, saveAnalyses } = require('../services/db');
 
-const PARTNERS_PATH = path.join(__dirname, '..', 'data', 'partners.json');
-const ANALYSES_PATH = path.join(__dirname, '..', 'data', 'analyses.json');
 const tempDir = path.join(__dirname, '..', 'temp');
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
@@ -28,18 +27,6 @@ const upload = multer({
   limits: { fileSize: 250 * 1024 * 1024 } // Support up to 250MB uploads
 });
 
-function readPartners() {
-  return JSON.parse(fs.readFileSync(PARTNERS_PATH, 'utf-8'));
-}
-
-function readAnalyses() {
-  return JSON.parse(fs.readFileSync(ANALYSES_PATH, 'utf-8'));
-}
-
-function writeAnalyses(analyses) {
-  fs.writeFileSync(ANALYSES_PATH, JSON.stringify(analyses, null, 2));
-}
-
 // POST /api/analyze/text - Analyze client problem from text
 router.post('/text', async (req, res) => {
   try {
@@ -49,7 +36,7 @@ router.post('/text', async (req, res) => {
       return res.status(400).json({ error: 'Please provide a detailed problem description (at least 10 characters)' });
     }
 
-    const partners = readPartners();
+    const partners = await getPartners();
     const result = await analyzeProblem(problemText, partners, { industry: 'Manufacturing' });
 
     // Save analysis
@@ -62,11 +49,11 @@ router.post('/text', async (req, res) => {
       partnerCount: result.rankedPartners?.length || 0
     };
 
-    const analyses = readAnalyses();
+    const analyses = await getAnalyses();
     analyses.unshift(analysis);
     // Keep last 100 analyses
     if (analyses.length > 100) analyses.length = 100;
-    writeAnalyses(analyses);
+    await saveAnalyses(analyses);
 
     res.json(analysis);
   } catch (error) {
@@ -97,7 +84,7 @@ router.post('/document', upload.single('document'), async (req, res) => {
       return res.status(400).json({ error: 'Could not extract sufficient text from the document' });
     }
 
-    // Step 2: Use Claude to extract structured information
+    // Step 2: Use Claude/Gemini to extract structured information
     const extraction = await extractDocument(documentText);
 
     // Step 3: Build problem text from extraction
@@ -115,7 +102,7 @@ Success Criteria: ${(extraction.successCriteria || []).join('; ')}
     `.trim();
 
     // Step 4: Analyze against partners
-    const partners = readPartners();
+    const partners = await getPartners();
     const result = await analyzeProblem(problemText, partners, {
       industry: 'Manufacturing'
     });
@@ -135,10 +122,10 @@ Success Criteria: ${(extraction.successCriteria || []).join('; ')}
       partnerCount: result.rankedPartners?.length || 0
     };
 
-    const analyses = readAnalyses();
+    const analyses = await getAnalyses();
     analyses.unshift(analysis);
     if (analyses.length > 100) analyses.length = 100;
-    writeAnalyses(analyses);
+    await saveAnalyses(analyses);
 
     res.json(analysis);
   } catch (error) {
@@ -148,9 +135,9 @@ Success Criteria: ${(extraction.successCriteria || []).join('; ')}
 });
 
 // GET /api/analyze/history - Get analysis history
-router.get('/history', (req, res) => {
+router.get('/history', async (req, res) => {
   try {
-    const analyses = readAnalyses();
+    const analyses = await getAnalyses();
     const limit = parseInt(req.query.limit) || 20;
     res.json({
       analyses: analyses.slice(0, limit),
@@ -162,9 +149,9 @@ router.get('/history', (req, res) => {
 });
 
 // GET /api/analyze/:id - Get single analysis
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const analyses = readAnalyses();
+    const analyses = await getAnalyses();
     const analysis = analyses.find(a => a.id === req.params.id);
     if (!analysis) {
       return res.status(404).json({ error: 'Analysis not found' });

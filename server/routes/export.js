@@ -1,24 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
-
-const ANALYSES_PATH = path.join(__dirname, '..', 'data', 'analyses.json');
-const PARTNERS_PATH = path.join(__dirname, '..', 'data', 'partners.json');
-
-function readAnalyses() {
-  return JSON.parse(fs.readFileSync(ANALYSES_PATH, 'utf-8'));
-}
-
-function readPartners() {
-  return JSON.parse(fs.readFileSync(PARTNERS_PATH, 'utf-8'));
-}
+const { getAnalyses, getPartners } = require('../services/db');
 
 // POST /api/export/pdf - Generate PDF report data
-router.post('/pdf', (req, res) => {
+router.post('/pdf', async (req, res) => {
   try {
     const { analysisId } = req.body;
-    const analyses = readAnalyses();
+    const analyses = await getAnalyses();
     const analysis = analyses.find(a => a.id === analysisId);
 
     if (!analysis) {
@@ -26,7 +14,7 @@ router.post('/pdf', (req, res) => {
     }
 
     // Return structured data for client-side PDF generation
-    const partners = readPartners();
+    const partners = await getPartners();
     const enrichedPartners = (analysis.result?.rankedPartners || []).map(rp => {
       const fullPartner = partners.find(p => p.id === rp.partnerId);
       return { ...rp, fullDetails: fullPartner || null };
@@ -59,17 +47,17 @@ router.post('/pdf', (req, res) => {
 });
 
 // POST /api/export/excel - Generate Excel report data
-router.post('/excel', (req, res) => {
+router.post('/excel', async (req, res) => {
   try {
     const { analysisId } = req.body;
-    const analyses = readAnalyses();
+    const analyses = await getAnalyses();
     const analysis = analyses.find(a => a.id === analysisId);
 
     if (!analysis) {
       return res.status(404).json({ error: 'Analysis not found' });
     }
 
-    const partners = readPartners();
+    const partners = await getPartners();
     const rows = (analysis.result?.rankedPartners || []).map((rp, index) => {
       const fullPartner = partners.find(p => p.id === rp.partnerId);
       return {

@@ -5,8 +5,8 @@ const path = require('path');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const { parseSpreadsheet } = require('../services/documentParser');
+const { getPartners, savePartners } = require('../services/db');
 
-const DATA_PATH = path.join(__dirname, '..', 'data', 'partners.json');
 const tempDir = path.join(__dirname, '..', 'temp');
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
@@ -26,19 +26,10 @@ const upload = multer({
   limits: { fileSize: 250 * 1024 * 1024 } // Support up to 250MB uploads
 });
 
-function readPartners() {
-  const data = fs.readFileSync(DATA_PATH, 'utf-8');
-  return JSON.parse(data);
-}
-
-function writePartners(partners) {
-  fs.writeFileSync(DATA_PATH, JSON.stringify(partners, null, 2));
-}
-
 // GET /api/partners - List all partners with optional search/filter
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    let partners = readPartners();
+    let partners = await getPartners();
     const { search, industry, capability, tier, solution } = req.query;
 
     if (search) {
@@ -76,9 +67,9 @@ router.get('/', (req, res) => {
 });
 
 // GET /api/partners/filters - Get available filter options
-router.get('/filters', (req, res) => {
+router.get('/filters', async (req, res) => {
   try {
-    const partners = readPartners();
+    const partners = await getPartners();
     const industries = [...new Set(partners.flatMap(p => p.industries))].sort();
     const capabilities = [...new Set(partners.flatMap(p => p.capabilities))].sort();
     const tiers = [...new Set(partners.map(p => p.tier))].sort();
@@ -91,9 +82,9 @@ router.get('/filters', (req, res) => {
 });
 
 // GET /api/partners/:id - Get single partner
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const partners = readPartners();
+    const partners = await getPartners();
     const partner = partners.find(p => p.id === req.params.id);
     if (!partner) {
       return res.status(404).json({ error: 'Partner not found' });
@@ -105,9 +96,9 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/partners - Add new partner
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const partners = readPartners();
+    const partners = await getPartners();
     const newPartner = {
       id: `p_${uuidv4().split('-')[0]}`,
       name: req.body.name,
@@ -130,7 +121,7 @@ router.post('/', (req, res) => {
     }
 
     partners.push(newPartner);
-    writePartners(partners);
+    await savePartners(partners);
     res.status(201).json(newPartner);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create partner', details: error.message });
@@ -138,16 +129,16 @@ router.post('/', (req, res) => {
 });
 
 // PUT /api/partners/:id - Update partner
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
-    const partners = readPartners();
+    const partners = await getPartners();
     const index = partners.findIndex(p => p.id === req.params.id);
     if (index === -1) {
       return res.status(404).json({ error: 'Partner not found' });
     }
 
     partners[index] = { ...partners[index], ...req.body, industries: ['Manufacturing'], id: req.params.id };
-    writePartners(partners);
+    await savePartners(partners);
     res.json(partners[index]);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update partner', details: error.message });
@@ -155,16 +146,16 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/partners/:id - Delete partner
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    let partners = readPartners();
+    let partners = await getPartners();
     const index = partners.findIndex(p => p.id === req.params.id);
     if (index === -1) {
       return res.status(404).json({ error: 'Partner not found' });
     }
 
     partners.splice(index, 1);
-    writePartners(partners);
+    await savePartners(partners);
     res.json({ message: 'Partner deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete partner', details: error.message });
@@ -172,7 +163,7 @@ router.delete('/:id', (req, res) => {
 });
 
 // POST /api/partners/import - Bulk import from spreadsheet
-router.post('/import', upload.single('file'), (req, res) => {
+router.post('/import', upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -188,7 +179,7 @@ router.post('/import', upload.single('file'), (req, res) => {
       }
     }
 
-    const existingPartners = readPartners();
+    const existingPartners = await getPartners();
 
     // Merge: update existing by name, add new ones
     let added = 0;
@@ -207,7 +198,7 @@ router.post('/import', upload.single('file'), (req, res) => {
       }
     });
 
-    writePartners(existingPartners);
+    await savePartners(existingPartners);
     res.json({
       message: `Import complete: ${added} added, ${updated} updated`,
       added,
@@ -251,7 +242,7 @@ router.post('/add-partner-document', upload.single('document'), async (req, res)
     partnerProfile.industries = ['Manufacturing'];
 
     // 3. Save partner details
-    const existingPartners = readPartners();
+    const existingPartners = await getPartners();
     partnerProfile.id = `p_${uuidv4().split('-')[0]}`;
     
     // Check if partner already exists by name (case-insensitive)
@@ -265,7 +256,7 @@ router.post('/add-partner-document', upload.single('document'), async (req, res)
       existingPartners.push(partnerProfile);
     }
 
-    writePartners(existingPartners);
+    await savePartners(existingPartners);
     res.json({ message: 'Partner added successfully', partner: partnerProfile });
   } catch (error) {
     console.error('Partner addition error:', error);

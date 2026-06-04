@@ -1,14 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const { comparePartners } = require('../services/ai');
-
-const PARTNERS_PATH = path.join(__dirname, '..', 'data', 'partners.json');
-
-function readPartners() {
-  return JSON.parse(fs.readFileSync(PARTNERS_PATH, 'utf-8'));
-}
+const { getPartners } = require('../services/db');
 
 // POST /api/compare - Compare selected partners against a problem
 router.post('/', async (req, res) => {
@@ -25,7 +18,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Please provide a problem description for context' });
     }
 
-    const allPartners = readPartners();
+    const allPartners = await getPartners();
     const selectedPartners = partnerIds
       .map(id => allPartners.find(p => p.id === id))
       .filter(Boolean);

@@ -28,6 +28,10 @@ ANTHROPIC_API_KEY=your-claude-api-key
 
 # Server Port
 PORT=3001
+
+# MongoDB Connection URI (Optional - enables persistent database storage)
+# If left blank, the app will fall back to local JSON files (ideal for offline development)
+MONGODB_URI=mongodb+srv://...
 ```
 
 ### 2. Start the Development Servers
@@ -70,7 +74,10 @@ Ensure your local code changes are committed and pushed to a repository on GitHu
 2. Add your Gemini key:
    * **Key**: `GEMINI_API_KEY`
    * **Value**: `your-gemini-api-key` *(Your Gemini API key)*
-3. Add other optional variables:
+3. Add MongoDB for persistence (Required for persistent data on Render Free Tier):
+   * **Key**: `MONGODB_URI`
+   * **Value**: `mongodb+srv://<username>:<password>@cluster0.mongodb.net/partnership_fitment?retryWrites=true&w=majority` *(Obtain a free MongoDB database connection string from [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))*
+4. Add other optional variables:
    * **Key**: `NODE_ENV`
    * **Value**: `production`
    * **Key**: `PORT`

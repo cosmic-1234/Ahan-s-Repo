@@ -1,24 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
-
-const PARTNERS_PATH = path.join(__dirname, '..', 'data', 'partners.json');
-const ANALYSES_PATH = path.join(__dirname, '..', 'data', 'analyses.json');
-
-function readPartners() {
-  return JSON.parse(fs.readFileSync(PARTNERS_PATH, 'utf-8'));
-}
-
-function readAnalyses() {
-  return JSON.parse(fs.readFileSync(ANALYSES_PATH, 'utf-8'));
-}
+const { getPartners, getAnalyses } = require('../services/db');
 
 // GET /api/analytics/dashboard
-router.get('/dashboard', (req, res) => {
+router.get('/dashboard', async (req, res) => {
   try {
-    const partners = readPartners();
-    const analyses = readAnalyses();
+    const partners = await getPartners();
+    const analyses = await getAnalyses();
 
     // Total stats
     const totalPartners = partners.length;
