@@ -214,7 +214,6 @@ export default function PartnerDatabase() {
               <th>Tier</th>
               <th>Solutions</th>
               <th>Capabilities</th>
-              <th>Employees</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -256,7 +255,6 @@ export default function PartnerDatabase() {
                       )}
                     </div>
                   </td>
-                  <td>{p.employeeCount ? p.employeeCount.toLocaleString() : '—'}</td>
                   <td onClick={(e) => e.stopPropagation()}>
                     <div className="btn-group">
                       <button className="btn btn-ghost btn-sm" onClick={() => { setEditingPartner(p); setShowAddModal(true); }}>
@@ -270,7 +268,7 @@ export default function PartnerDatabase() {
                 </tr>
                 {expandedId === p.id && (
                   <tr>
-                    <td colSpan={6} style={{ background: 'var(--color-bg-tertiary)', padding: 'var(--space-6)' }}>
+                    <td colSpan={5} style={{ background: 'var(--color-bg-tertiary)', padding: 'var(--space-6)' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-6)' }}>
                         <div>
                           <div className="fitment-card-section-title">Description</div>

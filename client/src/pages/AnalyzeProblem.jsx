@@ -218,7 +218,7 @@ export default function AnalyzeProblem() {
 
   return (
     <div>
-      <BannerCard />
+      <BannerCard showCredits={true} />
 
       {!result && !loading && (
         <>

@@ -54,6 +54,65 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// AI Credits endpoint — fetches live usage from OpenRouter
+app.get('/api/credits', async (req, res) => {
+  try {
+    const provider = process.env.OPENROUTER_API_KEY ? 'openrouter' : 'groq';
+
+    if (process.env.OPENROUTER_API_KEY) {
+      // OpenRouter provides key info: usage, limit, is_free_tier
+      const resp = await fetch('https://openrouter.ai/api/v1/auth/key', {
+        headers: { 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}` }
+      });
+      if (!resp.ok) throw new Error(`OpenRouter auth check failed: ${resp.status}`);
+      const json = await resp.json();
+      const data = json.data || json;
+      const isFree = data.is_free_tier ?? true;
+      const usage  = data.usage  ?? 0;  // credits used (USD)
+      const limit  = data.limit  ?? null; // null = unlimited on free tier
+
+      return res.json({
+        provider: 'OpenRouter (Llama 3.3 70B)',
+        isFree,
+        // Free tier: no hard credit limit, just rate limits per minute
+        creditsUsed:      isFree ? null : usage,
+        creditsRemaining: isFree ? null : (limit ? limit - usage : null),
+        creditLimit:      isFree ? null : limit,
+        usagePct:         (!isFree && limit) ? Math.round((usage / limit) * 100) : 0,
+        // Rate limit info from OpenRouter
+        rateLimit: data.rate_limit || null,
+        status: isFree ? 'free_unlimited' : (limit && usage >= limit * 0.9 ? 'near_limit' : 'ok'),
+        label: isFree
+          ? '∞ Free Tier — No Daily Limit'
+          : `$${(limit - usage).toFixed(4)} remaining of $${limit?.toFixed(2)}`,
+      });
+    }
+
+    // Groq fallback info
+    if (process.env.GROQ_API_KEY) {
+      const groqKeys = [
+        process.env.GROQ_API_KEY,
+        process.env.GROQ_API_KEY_2,
+        process.env.GROQ_API_KEY_3,
+      ].filter(Boolean).length;
+      return res.json({
+        provider: 'Groq (Llama 3.3 70B)',
+        isFree: true,
+        creditsUsed: null,
+        creditsRemaining: null,
+        status: 'ok',
+        groqKeys,
+        label: `Free tier · ${groqKeys} key${groqKeys > 1 ? 's' : ''} · 100K tokens/day each`,
+      });
+    }
+
+    res.status(503).json({ error: 'No AI provider configured' });
+  } catch (err) {
+    console.error('[Credits]', err.message);
+    res.status(500).json({ error: 'Failed to fetch credit info', details: err.message });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Server error:', err);
